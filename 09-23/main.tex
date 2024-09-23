@@ -1,0 +1,368 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+% imposta il titolo
+\title{Appunti Progettazione Web}
+\author{Luca Seggiani}
+\date{23-09-24}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+\lstdefinelanguage{javascript}{
+	keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywords={class, export, boolean, throw, implements, import, this},
+	ndkeywordstyle=\color{darkgray}\bfseries,
+	identifierstyle=\color{black},
+	sensitive=false,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{purple}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	morestring=[b]',
+	morestring=[b]"
+}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 23-09-24}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+\subsection{Introduzione}
+Il corso di progettazione web tratta i seguenti argomenti:
+
+\begin{itemize}
+	\item Il linguaggio HTML 5.0
+	\item I Cascading Style Sheet (CSS)
+	\item Programmazione lato client: JavaScript (ECMAScript)
+	\item Programmazione lato server: PHP
+	\item Il protocollo HTTP
+\end{itemize}
+
+\subsection{Storia del Web}
+
+Il Web, o World-Wide Web, è un'applicazione di Internet (come lo sono la posta elettronica, il File Transfer Protocol (FTP), ecc...).
+
+\subsubsection{Reti a commutazione}
+
+Le reti telefoniche (vecchio stile) forniscono un buon modello per il funzionamento di Internet.
+Le vecchie reti telefoniche erano reti a \textbf{commutazione di circuito}, ergo stabilivano una connessione fra due utenti attraverso un circuito fisico.
+Il filo di rame fisico che collegava i due utenti era riservato a loro, e non poteva servire nessun'altro durante il tempo della chiamata.
+Questo sistema aveva delle chiare problematiche:
+\begin{itemize}
+	\item La connessione va stabilita e mantenuta per la durata della chiamata;
+	\item C'è difficoltà a mantenere più chiamate simultaneamente;
+	\item Si spreca banda in quanto anche i silenzi vengono trasmessi.
+\end{itemize}
+Un'alternativa è una rete a \textbf{commutazione di pacchetto}.
+La rete ARPANET non usava una rete a commutazione di circuito, ma una rete a commutazione di pacchetti.
+In una rete di questo tipo, il messaggio viene diviso in pacchetti, che possono prenderere strade diverse per raggiungere il destinatario.
+Un pacchetto contiene informazioni sul mittente, il destinatario, e l'ordine del pacchetto stesso nel messaggio trasmesso.
+
+Ad esempio, se Aldo vuole inviare a Bruno il messaggio "Didgeridoo è una parola difficile da dire", questo messaggio potrebbe essere diviso nei pacchetti:
+\begin{itemize}
+	\item Aldo | Bruno | 1 | "Didgeridoo"
+	\item Aldo | Bruno | 2 | "è una parola"
+	\item Aldo | Bruno | 3 | "difficile da dire"
+\end{itemize}
+e questi pacchetti tramessi attraverso la rete dal mittente al destinatario.
+
+Le reti a commutazioni di pacchetti sono più efficienti in quanto:
+\begin{itemize}
+	\item Sono più robuste;
+	\item Non richiedono la totalità delle risorse di trasferimento finché si mantiene la conversazione.
+\end{itemize}
+Internet nasce dal progetto ARPANET, e adotta questo tipo di design.
+
+\subsubsection{Protocollo TCP/IP}
+Uno dei primi problemi sorti nella progettazione di Internet è stato quello di unificare le regole di dialogo fra più reti.
+Una prima soluione a questo problema, sorta nel 1981, è stata il Transmission Control Protocol / Internet Protocol (TCP/IP).
+
+\subsubsection{Web}
+L'invenzione del Web si attribuisce solitamente a Tim Berners-Lee.
+Dalla sua concezione iniziale ad oggi, le caratteristiche fondamentali del sistema sono rimaste invariate:
+\begin{itemize}
+	\item Un Unique Resource Locator (URL) per identificare e locare risorse sul Web;
+	\item Il protocolo HTTP per descrivere come le richieste e le risposte operano;
+	\item Un programma, chiamato \textbf{server}, che risponde alle richieste HTTP;
+	\item Il linguaggio HTML per pubblicare documenti;
+	\item Un programma, chiamato \textbf{browser} (che fa la parte del \textbf{client}), che crea richieste HTTP dagli URL, e visualizza l'HTML che riceve.
+\end{itemize}
+
+Poco dopo la sua fondazione, Berners-Lee aiutò a fondare il Word Wide Web Consortium (W3C), che ha facilitato la crescita della rete attraverso la creazione di standard.
+Questo è stato permesso dalla decisione del CERN di rendere tutto il codice sorgente e i protocolli web sviluppati in questo periodo, effettivamente liberi.
+
+Alcuni dei vantaggi delle applicazioni Web sono:
+\begin{itemize}
+	\item Accessibilità da parte di ogni computer connesso a Internet;
+	\item Utilizzabile con più browser e sistemi operativi;
+	\item Più semplici da aggiornare;
+	\item Archiviazione dei dati centralizzata.
+\end{itemize}
+alcuni contro, invece, sono:
+\begin{itemize}
+	\item Richiesta di avere una connessione internet attiva.
+	\item Problemi di sicurezza, dati dalla trasmissione di dati sensibili attraverso Internet;
+	\item Problemi di inaderenza agli standard di alcuni siti su alcuni browser;
+	\item Accesso limitato al sistema operativo.
+\end{itemize}
+
+\subsubsection{Intranet}
+Un'intranet è una rete internet limitata ad un'organizzazione o un'azienda.
+A differenza delle reti internet, le reti intranet sono private e limitate agli utenti che le usano (impiegati o clienti).
+Il controllo sulle connessioni in entrata e in uscita di una rete internet o intranet è solitamente eseguito da un \textbf{firewall}.
+
+\subsubsection{Siti Web statici}
+Un sito web statico è formato da pagine HTML che appaiono identiche a tutti gli utenti in tutti i momenti.
+
+Storicamente, questi contenuti venivano mantenuti dal cosiddetto webmaster, che doveva solo modificare il codice in HTML e, eventualmente, immagini o altri contenuti multimediali.
+
+Il principio di funzionamento di un sito statico è il seguente:
+\begin{itemize}
+	\item L'utente (il client) richiede una pagina al server;
+	\item Il server risponde alla richiesta erogando la pagina desiderata;
+	\item L'utente riceve la pagina e la visualizza.
+\end{itemize}
+
+\subsubsection{Siti Web dinamici}
+Dopo alcuni anni dall'invenzione del Web, alcuni siti iniziarono a diventare più complicati e ad usare programmi che giravano sui web server per creare contenuti in maniera dinamica.
+
+Secondo questo modello, il principio di funzionamento di un sito statico è il seguente:
+\begin{itemize}
+	\item L'utente (il client) richiede una pagina al server;
+	\item Il server risponde alla richiesta erogando la pagina desiderata e eventualmente riempendola di informazioni generate da script, programmi, ecc... eseguiti sul momento;
+	\item L'utente riceve la pagina e la visualizza.
+\end{itemize}
+
+\subsubsection{Web 2.0}
+Web 2.0 è una buzzword che si riferisce principalmente a due cose:
+
+\begin{itemize}
+	\item Per gli utenti, Web 2.0 significa applicazioni interattive dove si possono consumare ma anche creare nuovi contenuti;
+	\item Per gli sviluppatori, Web 2.0 significa un nuovo modo di creare siti Web dinamici: la logica di programmazione si spostava dal server al client, attraverso il linguaggio Javascript.
+		Questo introduceva diversi problemi per quanto riguarda l'esecuzione di comunicazioni asincrone.
+\end{itemize}
+
+\subsection{Protocolli Internet}
+Un protocollo è una serie di regole che vengono usate da più calcolatori che comunicano fra loro.
+I protocolli TCP/IP vennero inizialmente pensati come uno stack di quattro livelli, anche se alcune astrazioni dividono questo stack ulteriormente in quattro o cinque livelli.
+Vediamo quindi i quattro livelli fondamentali, dal basso verso l'alto:
+
+\begin{enumerate}
+	\item \textbf{Link Layer:} si occupa della trasmssione fisica di bit di informazione. 
+		\par Esempio: \textbf{MAC};
+	\item \textbf{Internet Layer:} stabilisce connessioni, routing e indirizzamento.
+		\par Esempio: \textbf{IPv4}, \textbf{IPv6};
+	\item \textbf{Transport Layer:} si assicura che le trasmissioni arrivano in ordine e senza errori.
+		\par Esempio: \textbf{TCP}, \textbf{UDP};
+	\item \textbf{Application Layer}: protocolli che permettono alle applicazioni di interagire con il Transport Layer.
+		\par Esempio: \textbf{HTTP}, \textbf{FTP}, \textbf{POP}.
+\end{enumerate}
+
+\subsubsection{Link Layer}
+Il link layer permette il controllo sull'hardware che stabilisce un collegamento con i mezzi di trasmissione cablata (vedi Ethernet) o wireless (vedi Wi-Fi), ovvero il Media Access Control (MAC), e fornisce gestione di errori e di flusso, ovvero il Logical Link Control (LLC).
+
+\subsubsection{Internet Layer, protocollo IP}
+Il protocollo IP identifica destinazioni attraverso indirizzi IP.
+Ogni dispositivo connesso a internet ha un indirizzo IP proprio, ovvero un codice di 32 bit che lo identifica univocamente.
+
+In particolare, gli indirizzi IPv4 sono quelli del protocollo TCP/IP originale.
+La rappresentazione comune degli indirizzi IPv4 (192.168.0.1) racchiude fra punti interi di 8 bit per volta dei 32 dell'indirizzo.
+
+Gli indirizzi IPv6 appartengono ad un protocollo aggiornato, attualmente in corso di adozione, che adottano 8 interi da 16 bit.
+Solitamente gli interi del protocollo IPv6 vengono scritti in esadecimale.
+
+L'indirizzo IP viene solitamente assegnato da un Internet Service Provider (ISP).
+Su reti locali, più computer possono condividere un'indirizzo IP, attraverso il NAT.
+NAT sta per Network Address Translation.
+All'interno della rete locale, ogni dispositivo usa un indirizzo diverso e privato (10.0.0/24).
+In uscita dalla rete locale, tutti i datagrammi hanno lo stesso indirizzo NAT IP di mittente, e diversi numeri di port.
+Questo è permesso da un meccanismo interno al ruoter NAT che converte automaticamente indirizzi IP e numeri di porta in indirizzi IP locali, e viceversa.
+
+\subsubsection{Transport Layer, protollo TCP}
+L'IP ha diverse limitazioni:
+\begin{itemize}
+	\item La consegna dei pacchetti non è garantita;
+	\item I pacchetti potrebbero arrivare in disordine;
+	\item La comunicazione avviene fra dispositivi;
+	\item Nessun controllo sul flusso o sulle congestioni.
+\end{itemize}
+
+Il Transport Layer si assicura che ogni trasmissione arrivi in ordine e senza errori, attraverso dei meccanismi di sicurezza:
+\begin{enumerate}
+	\item Prima i dati sono divisi in pacchetti formattati secondo il protocollo TCP;
+	\item In seguito, ogni pacchetto viene restituito al mittente attraverso l'ACK (acknowledge).
+\end{enumerate}
+In questo modo, il mittente sa se i suoi dati sono stati effettivamente ricevuti, e può reinviare i pacchetti perduti.
+
+Il protocollo TCP fornisce una serie di altre funzionalità: la gestione del flusso e della congestione.
+Questi meccanismi riguardano la diminuzione della frequenza di trasmissione in caso di sovraccarico del destinatario.
+
+\subsubsection{Application Layer}
+L'application layer è un livello di astrazione.
+Fanno parte di questo livello il protocollo di trasferimento di pagine web, ovvero l'Hypertext Transfer Protocol (HTTP), i protocolli di trasmissione di file, ovvero il File Transfer Protocol (FTP), o i protocolli di trasmissione di posta elettronica, come il Post Office Protocol (POP), fra gli altri. 
+
+\subsection{Modello client-server}
+Nel modello client-server, i dispositivi si dividono in client e server.
+Il server è attivo e pronto ad erogare servizi, mentre il client si occupa di fare richieste a cui il server dovrà adempire.
+Questo meccanismo forma il cosiddetto request-response loop.
+
+\subsubsection{L'alternativa peer-to-peer}
+In una rete peer-to-peer non esiste un unità centrale (il server), ma ogni nodo è in grado di inviare e ricevere indipendentemente dagli altri (peer).
+
+Questo sistema è molto comodo per la trasmissione in massa di dati senza la possibilità di arrestare il processo a partire da una sola macchina (vedi Napster).
+
+\subsubsection{Tipi di server}
+Prima, abbiamo mostrato il server come una macchina singola.
+In verità, il server può essere formato da più macchine che si dividono il carico delle richieste dei client, e che rispondono dallo stesso URL.
+
+Un'altra alternativa sono le cosiddette \textbf{server farm}.
+Una server farm distribuisce il carico delle richieste (attraverso i \textbf{load balancer}).
+Le server farm forniscono inoltre \textbf{failover redundancy}, ovvero la sicurezza che il servizio non si arresti anche nel caso di fallimento di singole macchine.
+
+Le server farm sono tipicamente collocate all'interno di specifiche strutture dette \textbf{data center}.
+Non è inusuale archiviare lo stesso sito su più macchine, in parallelo.
+Può accadere anche il contrario: più pagine possono essere archiviate sullo stesso server.
+
+\subsection{Nozioni sull'infrastruttura}
+Oltre ai server, che abbiamo visto, altri componenti vanno a formare la rete Internet: innanzitutto il modem (che può essere di tipo Digital Subscriber Line (DSL) se sfrutta la linea telefonica), che funge da ponte fra la rete interna a aziende o abitazioni, e la rete esterna, gestita da un Internet Service Provider (ISP) o un'altra autorità.
+
+Da qui il router, che si occupa di indirizzare i pacchetti secondo determinate tabelle chiamate routing tables, che includono per tutti gli IP di destinazione noti il prossimo passo (hop) da effettuare, ovvero il prossimo IP a cui inviare il pacchetto.
+
+I cavi ottici arrivano infine all'head-end dell'ISP, dove i dati vengono gestiti da apparecchiature come il Cable Modem Termination System (CMTS), o il Digital Subscriber Line Access Multiplexer (DSLAM) per le tramissioni DSL.
+
+Da qui i dati potrebbero dover viaggiare oltre, tipicamente arrivando ad altre reti, che possono avere estensione anche locale.
+Per rendere più veloci le tramissioni fra più reti, oggi si adoperano gli Internet Exchange Point (IX o IXP), che permettono a più reti di unirsi in strutture condivise.
+
+Spesso, sopratutto di recente, le grandi compagnie decidono di installare la loro infrastruttura (server e data center) il più vicino possibile agli IXP, per velocizzare la trasmissione portando i dati più vicini agli utenti.
+
+\end{document}
