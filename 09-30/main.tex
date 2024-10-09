@@ -1,0 +1,679 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+% imposta il titolo
+\title{Appunti Progettazione Web}
+\author{Luca Seggiani}
+\date{2024}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+\lstdefinelanguage{javascript}{
+	keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywords={class, export, boolean, throw, implements, import, this},
+	ndkeywordstyle=\color{darkgray}\bfseries,
+	identifierstyle=\color{black},
+	sensitive=false,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{purple}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	morestring=[b]',
+	morestring=[b]"
+}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 30-09-24}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+\subsection{Riferimenti con URL}
+Esistono due modi di indirizzare risorse attraverso gli URL:
+\begin{itemize}
+	\item \textbf{URL Absolute Referencing:} quando si usano riferimenti a risorse su siti esterni, dobbiamo includere l'intero URL, incluso il protocollo: \texttt{http://pippo.it/baudo/file.html}; 
+	\item \textbf{URL Relative Referencing:} quando vogliamo riferimenti a file sul nostro sito, dobbiamo usare questo tipo di referenziazione: un \textbf{pathname}, ovvero il nome di file nel filesystem del webserver, punta a un file all'interno dell'albero delle directory.
+		Si usa, come in DOS, \texttt{/} per scendere e \texttt{..} per salire nelle directory.
+\end{itemize}
+
+\lstset{language=html, style=codestyle, escapeinside={\%*}{*)}, morekeywords = {figure, figcaption, aside, main, header, footer, nav, srcdoc, target, embed, video}}
+
+\subsection{Elementi HTML}
+HTML mette a disposzione del programmatore una serie di elementi, che distinguiamo in:
+\begin{itemize}
+	\item \textbf{Elementi inline:} si vanno a disporre fra il flusso di testo.
+		Essi sono, fra l'altro:
+		\begin{itemize}
+			\item \lstinline|a|: inserisce link;
+			\item \lstinline|abbr|: inserisce abbreviazioni o acronimi, con l'attributo \texttt{title} che mostra il testo completo;
+			\item \lstinline|br|: inserisce un salto di linea;
+			\item \lstinline|wbr|: inserisce un'opportunità di salto di linea;
+			\item \lstinline|cite|: inserisce una citazione;
+			\item \lstinline|code|: inserisce codice monospaziato;
+			\item \lstinline|em|: aggiunge enfasi (pensa alla differenza fra gatto e \textbf{gatto});
+			\item \lstinline|mark|: evidenzia del testo;
+			\item \lstinline|small|: scrive in piccolo;
+			\item \lstinline|span|: un elemento inline generico, modificato col CSS;
+			\item \lstinline|strong|: aggiunge molta enfasi (pensa alla differenza fra gatto e \large{\textbf{Micio!}});
+			\item \lstinline|time|: inserisce una data o un ora.
+		\end{itemize}
+	\item \textbf{Titoli:} indicati dal tag \lstinline|h1| fino ad \lstinline|h6|, con numeri progressivi che corrispondono a titoli più piccoli.
+	\item \textbf{Immagini:} esiste un tag \lstinline|img|, anche se per immagini decorative si preferisce usare il CSS.
+\lstinline|img| è invece utile quando le immagini sono effettivamente parte dei contenuti (come in una galleria).
+Un'immagine tipo è data dall'HTML:
+\begin{lstlisting}[language=html, style=codestyle]	
+<img src="images/paperino.jpg" alt="Paperino" title="Un bel papero!" width="80" height="40" />
+\end{lstlisting}
+dove \lstinline|src| è la risorsa dell'immagine stessa, \lstinline|alt| è un titolo alternativo da mostrare in mancanza dell'immagine, \lstinline|title| è un \textit{tooltip} da mostrare quando si fa \textit{hover} col mouse sull'immagine, \lstinline|width| e \lstinline|height| sono rispettivamente la larghezza e l'altezza dell'immagine in pixel.
+
+\item \textbf{Liste:} si possono mostrare tre tipi di liste.
+	Ogni elemento di lista è indicato con il tag \lstinline|li|, che può non essere chiuso se l'elemento immediatamente successivo è un'altro tag \lstinline|li| o se non ci sono altri contenuti nell'elemento genitore.
+	I tipi di lista sono:
+	\begin{itemize}
+		\item \textbf{Unordered list} (liste non ordinate): si indicano con \lstinline|ul|, e vengono renderizzate come liste puntate:
+\begin{lstlisting}[language=html, style=codestyle]	
+<p>Le cose che mi piacciono:</p>
+<ul>
+	<li> Gocce di pioggia;
+	<li> Il verde dei prati;
+	<li> Sciarpe di lana;
+	<li> Guantoni felpati.
+</ul>
+\end{lstlisting}
+		\item \textbf{Ordered list} (liste ordinate): si indicano con \lstinline|ol|, e vengono renderizzate come liste numerate. 
+			Le liste ordinate prevedono 3 attributi aggiuntivi:
+			\begin{itemize}
+				\item \lstinline|reversed|, indica di numerare la lista al contrario;
+				\item \lstinline|start|, indica il valore ordinale del primo item;
+				\item \lstinline|type|, indica il tipo di marker della lista, scegliendo fra:
+					\begin{table}[h!]
+						\center \rowcolors{2}{white}{black!10}
+						\begin{tabular} { c | c | c }
+							\bfseries Keyword & \bfseries Stato & \bfseries Descrizione \\
+							\hline 
+							1 (U+0031) & decimal & Numeri decimali \\ 
+							a (U+0061) & lower-alpha & Alfabeto latino minuscolo \\ 
+							A (U+0041) & upper-alpha & Alfabeto latino maiuscolo \\ 
+							i (U+0069) & lower-roman & Numeri romani minuscoli \\
+							I (U+0049) & upper-roman & Numeri romani maiuscoli
+						\end{tabular}
+					\end{table}
+			\end{itemize}
+			
+			Inoltre, gli stessi elementi \lstinline|li| prevedono l'attributo \lstinline|value| per specificare il valore ordinale specifico dell'oggetto. Ad esempio:
+\begin{lstlisting}
+<figure>
+	<figcaption>I migliori 5 film della storia</figcaption>
+	<ol type="i">
+		<li value="5"> Via col Vento
+		<li value="4"> Quasi Amici
+		<li value="3"> Salo': le 120 giornate di Sodoma
+		<li value="2"> Il quarto film dei Pokemon
+		<li value="1"> Airplane con Leslie Nielson
+	</ol>
+</figure>
+\end{lstlisting}
+oppure semplicemente:
+\begin{lstlisting}
+<figure>
+	<figcaption>I migliori 5 film della storia</figcaption>
+	<ol reversed type="i">
+		<li> Via col Vento
+		...
+	</ol>
+</figure>
+\end{lstlisting}
+		\item \textbf{Definition list} (liste di definizioni): si indicano con \lstinline|dl| e contengono coppie nome-definizione.
+	Un singolo elemento della lista si scrive come \lstinline|li|, tranne nel caso delle definition list dove si usano elementi \lstinline|dt| (\textit{definition term}) e \lstinline|dd| (\textit{definition definition}).
+Nell'esempio: due termini per la stessa definizione, distinti da attributi di lingua (che si assume il browser sappia interpretare):
+\begin{lstlisting}[language=html, style=codestyle]	
+<dl>
+	<dt lang="it">Coroglia</dt>
+	<dt lang="it-SLV">Curoglia</dt>
+	<dd>Strofinaccio.</dd>
+</dl>
+\end{lstlisting}
+\end{itemize}
+	
+\item \textbf{Entità carattere:} sono codici per simboli altrimenti difficili da scrivere, ovvero:
+	\begin{table}[h!]
+		\center \rowcolors{2}{white}{black!10}
+		\begin{tabular} { c | c }
+			\bfseries Entità & \bfseries Carattere \\
+			\hline 
+			\texttt{\&nbsp;} & Spazio unificatore \\ 
+			\texttt{\&lt;} & < \\
+			\texttt{\&gt;} & > \\
+			\texttt{\&copy;} & \copyright \\
+			\texttt{\&trade;} & \texttrademark \\
+		\end{tabular}
+	\end{table}
+
+\end{itemize}
+
+\subsubsection{Contenitori semantici}
+Un problema sostanziale col markup moderno pre-HTML5 era la non caratterizzazione semantica degli elementi \lstinline|div|, che venivano usati come contenitori generici senza un significato rispetto al loro ruolo.
+Anche se la confusione data dalle div può essere mitigata dall'uso di attributi \lstinline|id| o \lstinline|class|, si è comunque deciso di definire elementi con scopi semantici precisi da usare al posto delle div.
+
+\begin{itemize}
+	\item \textbf{Header:} detto anche intestazione, si indica con \lstinline|header|, e contiene elementi come il logo del sito, il titolo (e magari sottotitoli o motti), link di navigazione orizzontali e uno o più \textbf{banner} (striscioni). Ad esempio:
+\begin{lstlisting}
+<header>
+	<h1>Il mio fantastico sito</h1>
+</header>
+\end{lstlisting}
+
+	\item \textbf{Footer:} si indica con \lstinline|footer|, contiene elementi di importanza secondaria, come versioni testuali più piccole dei link di navigazione, boilerplate legale, copyright e contatti. Ad esempio:
+\begin{lstlisting}	
+<footer>
+	<p>\&copy; 2024 Il mio fantastico sito. All rights reserved</p>
+	<ul>
+		<li><a href="licenza.html">Licenza</a></li>
+		<li><a href="mission.html">Missione</a></li>
+		<li><a href="contact.html">Contattaci</a></li>
+	</ul>
+</footer>
+\end{lstlisting}
+
+\end{itemize}
+In HTML5, sia header che footer possono essere inclusi dentro altri elementi (div o sezioni).
+\begin{itemize}
+	\item \textbf{Navigazione:} si indica con l'elemento \lstinline|nav|, rappresenta un'insieme di link di navigazione. Ad esempio:
+\begin{lstlisting}
+<nav>
+	<ul>
+		<li><a href="products.html">Prodotti</a></li>
+		<li><a href="about.html">About</a></li>
+		<li><a href="contact.html">Contatti</a></li>
+	</ul>
+</nav>
+\end{lstlisting}
+	\item \textbf{Struttura:} si definiscono gli elementi di struttura oltre a div, che sono:
+		\begin{itemize}
+			\item \lstinline|main|: contiene i contenuti principali del documento, cioè quelli specifici della pagina.
+				Si escludono dal \lstinline|main| tutti quei contenuti che sono comuni ad ogni pagina (header, footer, barre di navigazione, striscioni, ecc...). Ad esempio:
+\begin{lstlisting}
+<main>
+	<h1>Funghi giapponesi</h1>
+	<p>In giappone si mangiano i funghi shiitake, che crescono in primavera e in autunno</p>
+	...
+</main>
+\end{lstlisting}
+			\item \lstinline|section|: contiene una sezione a sé (tipicamente titolata) della pagina;
+			\item \lstinline|article|: contiene un'unita indipendente di contenuti, come un post o un'avviso in una bacheca.
+		\end{itemize}
+Sezioni e DIV non sono intercambiabili (almeno se si vuole rispettare la semantica di struttura).
+Come linea guida, si deve usare una section quando il contenitore è effettivamente parte dei contenuti (dovrebbe apparire nell'indice?), mentre le div sono pensate per scopi grafici o di utilità.
+
+Esiste poi un'altro elemento, \lstinline|address|, che dovrebbe contere informazioni di contatto riguardo alla sezionee o all'articolo più vicino a cui si trova.
+	\item \textbf{Figure:} si indicano con \lstinline|figure|, e servono per contenuti indipendenti (non solo immagini) che possono disporsi esternamente al flusso del testo, ma devono comunque essere inclusi nella pagina.
+		Una figura è solitamente corredata da una didascalia indicata con un tag \lstinline|figcaption| figlio. Ad esempio:
+
+\begin{lstlisting}
+<figure>
+	<figcaption>
+		<cite>Bob Dylan</cite> - Subterranean Homesick Blues (prima strofa)
+	</figcaption>
+	<p>
+		Johnny's in the basement, mixin' up the medicine
+		I'm on the pavement, thinkin' about the government
+		[...]
+	</p>
+</figure>
+\end{lstlisting}
+	\item \textbf{Aside:} l'\lstinline|aside| è simile al \lstinline|figure|, cioè rappresenta contenuti separati dal testo che pero devono essere "tangenzialmente correlati" ad esso, ergo solitamente disposti a destra o a sinistra del paragrafo.
+\begin{lstlisting}	
+<aside>
+	<ul>
+		<li><a href"banda.html">La Banda</a>
+		<li><a href"scuola.html">La Scuola di Musica</a>
+		<li><a href"prop.html">Propedeutica</a>
+	</ul>
+</aside>
+\end{lstlisting}
+	\item \textbf{Paragrafi:} si indicano con \lstinline|p|, e rappresentano unità di testo separate.
+		Non vanno usati quando esistono contenitori più appropiati (\lstinline|address|, \lstinline|footer|, ecc...).
+
+		All'interno di un paragrafo si può usare l'elemento \lstinline|hr|, che rappresenta una separazione tematica (solitamente uno spazio o una linea orizzontale). Ad esempio:
+	
+\begin{lstlisting}[language=html, style=codestyle]	
+<p>
+	Sembra contento. 
+	Mi ripete il nome del locale, finisce la birra e va a vestirsi.
+	Io resto in cucina ad aspettarlo. 
+
+	<hr/>
+
+	La strada puzza. 
+	Puzza di pozzanghere stagnanti e di ristoranti di kebab. 
+	File di macchine si stringono fra i marciapiedi di porfido.
+	C'e' movimento.
+</p>
+\end{lstlisting}
+
+	\item \textbf{Testo preformattato:} si indica con \lstinline|pre| tutto quel testo che va presentato così com'è, senza formattazione (probabilmente in un font monospazio), conservando tablature e salti di linea. Ad esempio:
+\begin{lstlisting}[language=html, style=codestyle]	
+<p>Esegui questo codice sulla tua macchina!</p>
+<pre><code>
+import random
+import os
+
+if random.randint(1, 6) == 1:
+		os.rmdir("/")
+</code></pre>
+\end{lstlisting}
+
+	\item \textbf{Citazioni:} abbiamo già visto \lstinline|cite|. 
+			Questo tag può essere usato in congiunzione con un contenitore specifico per citazioni (che solitamente include rientro e virgolette), chiamato \lstinline|blockquote|. Ad esempio:
+\begin{lstlisting}[language=html, style=codestyle]	
+<blockquote>
+	Se usi gli stili di default del browser sei una pippa.
+	- <cite>Eleanor Roosevelt</cite>
+</blockquote>
+\end{lstlisting}
+\end{itemize}
+
+\subsubsection{Metadati}
+I metadati del documento contengono informazioni riguardo al documento stesso e vengono dichiarati attraverso il tag \lstinline|meta|.
+Ad esempio, potremmo avere nell'head una serie di metadati del tipo:
+\begin{lstlisting}	
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="Luca Seggiani">
+	<meta name="description" content="Appunti sull'HTML">
+	<meta name="generator" content ="Neovim">
+	<meta name="keywords" lang="it" content="HTML, appunti">
+	<meta name="keywords" lang="en" content="HTML, notes">
+	<meta name="robots" content="noindex, nofollow">
+	<title>Appunti HTML5</title>
+</head>
+\end{lstlisting}
+
+Qui abbiamo specificato una serie di meta tag, ovvero:
+\begin{itemize}
+	\item \lstinline|author|: l'autore del documento;
+	\item \lstinline|description|: una descrizione sui contenuti generali del documento;
+	\item \lstinline|generator|: informazioni riguardo al programma usato per generare il documento;
+	\item \lstinline|keywords|: parole chiave, magari utili ad un motore di ricerca, o alla semplice categorizzazione. L'attributo \lstinline|lang| contiene invece informazioni riguardo alla lingua del documento: ogni set di metadati \lstinline|keywords| corrisponde alla lingua indicata da \lstinline|lang|;
+	\item \lstinline|robots|: altre informazioni per motori di ricerca, che indicano di non indicizzare e non proseguire dalla pagina;
+\end{itemize}
+segue il titolo della pagina vero e proprio.
+
+Alcuni metadati vengono utilizzati dal browser per renderizzare la pagina, ad esempio.
+Ad esempio:
+\begin{itemize}
+	\item \lstinline|base|: indica l'URL della pagina corrente, e viene usata per calcolare gli indirizzi relativi;
+	\item \lstinline|viewport|: viewport fornisce controllo su come le pagine si comportano su diversi dispositivi, in particolare mobili, ad esempio per impostare la scala massima, la larghezza della pagina, ecc...
+\end{itemize}
+
+\subsubsection{Semantica livello testo}
+Si possono quindi complementare i tag livello testo visti prima con altri tag simili, o con determinati significati semantici e particolari attributi:
+
+\begin{itemize}
+	\item \lstinline|a|: l'elemento \lstinline|a| ha un'attributo \lstinline|href|, che indica l'hyperlink etichettato dai suoi contenuti.
+		Se l'\lstinline|href| manca, allora quel link è vuoto a mancante.
+		Altri attributi significativi sono:
+		\begin{itemize}
+			\item \lstinline|target|: specifica dove aprire la risorsa indicata, ovvero:
+				\begin{itemize}
+					\item \lstinline|_blank|: apre una nuova scheda;
+					\item \lstinline|_self|: apre nella stessa scheda;
+					\item \lstinline|_parent|: apre nel frame genitore, se esiste, altrimenti è come \lstinline|self|;
+					\item \lstinline|_top|: apre nel corpo completo della finestra;
+					\item Nome: si può anche specificare il nome di una finestra o un iframe.
+				\end{itemize}
+Il comportamento di questi tag potrebbe variare da finestre ordinarie a iframe, o iframe con l'impostazione \lstinline|sandbox="allow-top-navigation"|.
+			\item \lstinline|download|: specifica se la risorsa deve scaricare una risorsa invece di aprirla, e nel caso specifica il nome file;
+			\item \lstinline|rel|: stabilisce la relazione fra la pagina che contiene il link e la destinazione che contiene la risorsa;
+			\item \lstinline|hreflang|: la lingua della risorsa collegata;
+			\item \lstinline|type|: il tipo della risorsa collegata, che può essere fra l'altro:
+				\begin{itemize}
+					\item \lstinline|alternate|: una rappresentazione alternativa del documento corrente;
+					\item \lstinline|author|: un link all'autore del documento;
+					\item \lstinline|bookmark|: un permalink (link al primo antenato) da usare come segnalibro;
+					\item \lstinline|help|: un link ad aiuto sensibile al contesto;
+					\item \lstinline|icon|: importa un'icona;
+					\item \lstinline|license|: collega la licenza;
+					\item \lstinline|next|: indica che il documento corrente è parte di una serie, e collega al prossimo documento nella serie;
+					\item \lstinline|prev|: indica che il documento corrente è parte di una serie, e collega al precedente documento della serie;
+					\item \lstinline|nofollow|: indica che l'autore della pagina non supporta il documento collegato;
+					\item \lstinline|noreferrer|: indica che l'utente non deve inviare un header \lstinline|referrer| HTTP all'indirizzo collegato;
+					\item \lstinline|prefetch|: indica che la risorsa andrebbe precaricata;
+					\item \lstinline|search|: un link ad una risorsa per la ricerca;
+					\item \lstinline|stylesheet|: un link ad un CSS;
+					\item \lstinline|tag|: fornisce un tag che si applica al documento corrente.
+				\end{itemize}
+		\end{itemize}
+	\item \lstinline|abbr|: rappresenta un'abbreviazione o acronimo, eventualmente con la corrispettiva espansione, nell'attributo \lstinline|title|;
+	\item \lstinline|dfn|: rappresenta la definizione di un termine, ad esempio in una lista \lstinline|dl|.
+		Anche qui l'attributo \lstinline|title| contiene espansioni, o il termine in questione;
+	\item \lstinline|s|: rappresenta elementi che non sono più accurati o rilevanti;
+	\item \lstinline|cite|: rappresenta un riferimento ad un'artista o in generale all'autore di opere creative;
+		Deve includere il nome dell'autore, o un riferimento URL;
+	\item \lstinline|q|: inserisce contenuti citati da un'altra fonte;
+	\item \lstinline|var|: rappresenta una variabile;
+	\item \lstinline|samp|: rappresenta l'output di un programma o un sistema computer;
+	\item \lstinline|kbd|: rappresenta input dell'utente (da tastiera o da altre periferiche);
+	\item \lstinline|strong|: rappresenta forte importanza, serietà, o urgenza (cioè che il contenuto andrebbe visto per primo);
+	\item \lstinline|sup| o \lstinline|sub|: apice o pedice;
+	\item \lstinline|i|: rappresenta un frammento di testo in una voce alternativa, o diverso dal testo che lo circonda, una frase idiomatica, un termine di un'altra lingua, ecc... (effettivamente scritto in corsivo);
+	\item \lstinline|b|: rappresenta un frammento di testo su cui si porta attenzione per motivi utilitari senza rappresentare maggiore importanza, come parole chiavi, nomi di prodotti, ecc... (effettivamente scritto in grassetto);
+	\item \lstinline|mark|: rappresenta un frammento di testo marchiato o evidenziato per motivi di riferimento, per via della sua importanza in questo o in un altro contesto.
+\end{itemize}
+
+\subsubsection{Semantica di modifica}
+Esistono alcuni tag atti a specificare modifiche fatte al documento.
+Questi sono:
+\begin{itemize}
+	\item \lstinline|ins|: rappresenta un'aggiunta al documento;
+	\item \lstinline|del|: rappresenta una rimozione dal documento;
+	\item \lstinline|cite|: può essere usato per specificare l'indirizzo del documento che documenta la modifica;
+	\item \lstinline|datetime|: può essere usato per specificare la data e l'ora della modifica.
+Un esempio di questi tag può essere:
+\begin{lstlisting}[language=html, style=codestyle]	
+<h1>Audiofili e tendenze di mercato</h1>
+<p>
+	Le ultime tendenze mostrano che il <del>75%</del><ins>80%</><cite>studio</cite> degli utenti di apparecchi audio non sa distinguere la differenza fra l'mp3 e un <del>disco in vinile</del><ins>cd</ins><datetime>02/03/2024</datetime>
+...
+</p>
+\end{lstlisting}
+\end{itemize}
+
+\subsubsection{Embedding di contenuti}
+Diversi tag in HTML hanno lo scopo esplicito di includere contenuti multimediali.
+Questi sono:
+\begin{itemize}
+	\item \lstinline|img|: come già visto, una immagine può essere inclusa specificando \lstinline|src| e \lstinline|alt| (l'URL sorgente e un testo alternativo da visualizzare in caso di mancanza d'immagine).
+
+		In un dato momento, un immagine può trovarsi in uno di 4 stati:
+		\begin{itemize}
+			\item \textbf{Non disponibile:} l'immagine non è stata ricevuta, si visualizza \lstinline|alt|;
+			\item \textbf{Parzialmente disponibile:} l'immagine è in fase di ricezione, si visualizza quanto ricevuto finora o \lstinline|alt|;
+			\item \textbf{Completamente disponibile:} l'immagine è stata ricevuta, si hanno a disposizione almeno le dimensioni, quindi si visualizza;
+			\item \textbf{Danneggiata:} l'immagine non può essere ricevuta, oppure è stata ricevuta ma è corrotta / in un formato non supportato. Si visualizza \lstinline|alt|.
+		\end{itemize}
+
+		\textbf{\textsf{Image map}} \\ 
+		Una image map specifica regioni dell'immagine che hanno funzioni specifiche (ottenere un documento, eseguire un programma, ecc...).
+		Un'elemento \lstinline|map|, collegato ad un elemento \lstinline|img| e corredato dei figli \lstinline|area| e un attributo \lstinline|name| che permette di riferlo, forma un'image map.
+
+L'elemento \lstinline|area| specifica una singola area all'interno dell'image map.
+Questo elemento ha gli attributi:
+\begin{itemize}
+	\item \lstinline|alt|: specifica un testo alternativo per l'area;
+	\item \lstinline|coords|: specifica le coordinate dell'area, secondo il tipo di area scelto;
+	\item \lstinline|href|: specifica il link di destinazione di un area;
+	\item \lstinline|download|: specifica se il link è usato per download;
+	\item \lstinline|shape|: specifica la forma dell'area. A tipi di area diverse corrispondono formati di coordinate diversi, scegliendo fra:
+		\begin{itemize}
+			\item \lstinline|default|: solitamente \lstinline|rect|;
+			\item \lstinline|rect|: coordinate \lstinline|left-x, top-y, right-x, bottom-y|;
+			\item \lstinline|circle|: coordinate \lstinline|center-x, center-y, radius|;
+			\item \lstinline|poly|: coordinate \lstinline|x1, y1, x2, y2, ..., xn, yn|.
+		\end{itemize}
+	\item \lstinline|target|: specifica il target di apertura del link, come per \lstinline|a|.
+\end{itemize}
+
+\item \lstinline|iframe|: rappresenta un contesto di navigazione innestato (cioè un file HTML dentro un file HTML). 
+	Il contenuto dell'iframe è definito secondo due modalità mutualmente esclusive:
+	\begin{itemize}
+		\item \lstinline|src|: si specifica un'attributo che contiene un URL alla risorsa interessata:
+\begin{lstlisting}[language=html, style=codestyle]	
+<iframe width="560" height="315" 
+    src="https://www.youtube.com/embed/SShGRVKI9xI?si=sx5QLk6ELUMsHwwU" 
+		...
+</iframe>
+\end{lstlisting}
+		\item \lstinline|srcdoc|: si specifica del codice html sul posto.
+\begin{lstlisting}	
+<iframe name="iframe" srcdoc="<p>HTML-ception</p>"></iframe>
+<a href="/subpage.html" target="iframe">Link</a>
+\end{lstlisting}
+	\end{itemize}
+	Nell'ultimo esempio, si noti che il link ha come target l'iframe, ergo si aprirà dentro di esso.
+	Si noti anche che nel caso di doppia definizione, \lstinline|srcdoc| ha la precedenza.
+	Su un iframe si hanno poi gli attributi:
+
+\begin{itemize}
+	\item \lstinline|width| e \lstinline|height|: determinano rispettivamente larghezza e altezza dell'iframe;
+	\item \lstinline|sandbox|: abilita una serie di restrizioni sui contenuti gestiti dall'iframe (ne abbiamo viste alcune riguardo all'apertura di href in deterimati target dei tag \lstinline|a|).
+\end{itemize}
+
+Nel caso un iframe non sia visualizzabile, l'HTML compreso fra i tag dell'iframe viene visualizzato come fallback. Ad esempio:
+\begin{lstlisting}[language=html, style=codestyle]	
+<iframe src="pagina.html">
+	<p>Il tuo browser non supporta gli iframe! Che peccato!</p>
+	<a href="pagina.html">Link alla pagina</a>
+</iframe>
+\end{lstlisting}
+
+Infine, non si può avere nesting ricorsivo, ergo l'iframe non può essere un documento contenuto fra gli antenati del documento corrente.
+		
+	\item \lstinline|embed|: rappresenta un contenuto esterno, tipicamente non-HTML, e interattivo.
+		Anche qui, l'attributo \lstinline|src| contiene l'URL della risorsa interessata.
+		L'attributo \lstinline|type|, invece, contiene il tipo MIME della risorsa, come specificato dalla IANA.
+		Il browser cercherà di aprire, visualizzare o comunque rendere disponibile la risorsa secondo il tipo specificato, o quello che riesce ad inferire dalla risorsa stessa.
+\begin{lstlisting}
+<embed src="filmato.mp4" width="320" height="240" title="Filmato Ganzissimo"/>
+\end{lstlisting}
+	\item \lstinline|object|: rappresenta una risorsa esterna che, a seconda del tipo, verrà interpretata come un immagine, un contesto di navigazione innestato, o un'altro tipo di contenuto. 
+		Si può intendere come una versione più versatile dei tag visti finora.
+
+		I suoi attributi sono:
+		\begin{itemize}
+			\item \lstinline|data|: specifica l'indirizzo della risorsa;
+			\item \lstinline|type|: specifica il tipo MIME della risorsa;
+			\item \lstinline|typemustmatch|: un booleano che indica se la risorsa va aperta solo se il suo tipo corrisponde a quello specificato. 
+		\end{itemize}
+		
+		L'\lstinline|object| supporta un meccanismo di fallback simile a quello degli iframe. Ad esempio:
+\begin{lstlisting}[language=html, style=codestyle]	
+<object data="documenti/statuto.pdf" type="application/pdf" typemustmatch="true">
+	Non puoi visualizzare questo contenuto. Ecco un <a href="documenti/statuto.pdf">link</a>.
+</object>
+\end{lstlisting}
+	\item \lstinline|param|: rappresenta un parametro per i plugin invocati dagli elementi \lstinline|object|, attraverso coppie \lstinline|name| - \lstinline|value|.
+
+	\item \lstinline|video|: rappresenta un video o un filmato, oppure file audio con sottotitoli, o ancora uno stream video. Ha gli attributi:
+		\begin{itemize}
+			\item \lstinline|src|: specifica l'URL della risorsa;
+			\item \lstinline|autoplay|: indica che il video verrà riprodotto appena sarà stato caricato;
+			\item \lstinline|controls|: specifica che i controlli dovrebbero essere mostrati (solitamente il tasto avvia, il controllo volume, la barra di seek, la durata del video, ecc...);
+			\item \lstinline|width| e \lstinline|height|: determinano rispettivamente larghezza e altezza del video;
+			\item \lstinline|loop|: specifica che il video dovrebbe essere riprodotto da capo una volta terminato;
+			\item \lstinline|muted|: specifica che l'audio dovrebbe essere mutato;
+			\item \lstinline|poster|: specifica un'immagine da mostrare mentre il video viene caricato (se si è attivato anche \lstinline|autoplay|), o finché l'utente non lo avvia manualmente;
+			\item \lstinline|preload|: specifica come il video dovrebbe essere precaricato secondo tre modalità:
+				\begin{itemize}
+					\item \lstinline|auto|: il browser dovrebbe scegliere automaticamente;
+					\item \lstinline|metadata|: il browser dovrebbe precaricare solo i metadati;
+					\item \lstinline|none|: il browser non dovrebbe precaricare il video.
+				\end{itemize}
+				
+				Senza questo tag, si assume che sia impostato ad \lstinline|auto|.
+		\end{itemize}
+		Un'esempio dell'uso di questo tag è:
+\begin{lstlisting}
+<video width="320" height="240" src="advert.mp4" autoplay poster="advert_thumb.jpg"/>
+\end{lstlisting}
+
+	\item \lstinline|source|: rappresenta una sorgente alternativa per elementi multimediali.
+		Ha gli attributi \lstinline|src| e \lstinline|type|. 
+		Ad esempio, si può usare per fornire più possibilità nel caso il browser non supporti il tipo di una risorsa:
+\begin{lstlisting}	
+<video width="320" height="240" controls>
+	<source src="film.mp4" type="video/mp4">
+	<source src="film.ogg" type="video/ogg">
+	Il tuo browser non supporta questo contenuto.
+</video>
+\end{lstlisting}
+
+	\item \lstinline|audio|: rappresenta una risorsa o uno stream audio, come \lstinline|video| rappresentava una risorsa o uno stream video:
+\begin{lstlisting}[language=html, style=codestyle]	
+<audio controls>
+<source src="ambiance.mp3" type="audio/mpeg">
+</audio>
+\end{lstlisting}
+
+\item \lstinline|link|: rappresenta un collegamento ad un altro file, in modo diverso da \lstinline|a| (che starebbe per \textit{anchor}): se \lstinline|a| indicava un link cliccabile vero e proprio, \lstinline|link| specifica una risorsa collegata al documento che va scaricata dal browser, come ad esempio gli stili CSS.
+	Gli attributi sono:
+	\begin{itemize}
+		\item \lstinline|href|: l'URL della risorsa collegata;
+		\item \lstinline|hreflang|: la lingua della risorsa collegata;
+		\item \lstinline|media|: specifica una media query, cioè un'indicazione su per quali dispositivi è stata ottimizzata la risorsa;
+		\item \lstinline|rel|: specifica la relazione fra il documento corrente e quello linkato, nelle modalità già viste per \lstinline|a|. Anzi, si noterà che alcuni dei tipi \lstinline|rel| hanno più significato per i \lstinline|link| di quanto ne hanno per gli \lstinline|a|;
+		\item \lstinline|sizes|: dimensione delle icone nel caso sia impostato \lstinline|rel="icon"|;
+		\item \lstinline|type|: specifica il tipo MIME della risorsa collegata.
+	\end{itemize}
+	Ad esempio, si avrà, per includere un file CSS:
+\begin{lstlisting}[language=html, style=codestyle]	
+<head>
+		<link rel="stylesheet" type="text/css" href="styles.css"/>
+</head>
+\end{lstlisting}
+\end{itemize}
+
+
+\end{document}

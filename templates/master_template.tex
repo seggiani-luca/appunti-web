@@ -77,6 +77,11 @@
 \usepackage{listings}
 \usepackage[table]{xcolor}
 
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
 \lstdefinestyle{codestyle}{
 		backgroundcolor=\color{black!5}, 
 		commentstyle=\color{codegreen},
@@ -109,6 +114,19 @@
 		tabsize=2, 
 		numbers=none, 
 		breaklines=true
+}
+
+\lstdefinelanguage{css}{
+  keywords={color,background-image:,margin,padding,font,weight,display,position,top,left,right,bottom,list,style,border,size,white,space,min,width, transition:, transform:, transition-property, transition-duration, transition-timing-function},	
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  alsoletter={:},
+  alsodigit={-},
+	literate=%
+    {:}{{\textcolor{black}{:}}}1,  % Treat ':' as a regular symbol, not part of a keyword
 }
 
 \lstdefinelanguage{javascript}{
@@ -162,4 +180,8 @@
 \makeatother
 
 \begin{document}
+
+\pagestyle{fancy}
+\renewcommand{\thispagestyle}[1]{}
+
 \maketitle
