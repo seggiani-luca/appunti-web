@@ -1,0 +1,574 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+% imposta il titolo
+\title{Appunti Progettazione Web}
+\author{Luca Seggiani}
+\date{2024}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+\lstdefinelanguage{css}{
+  keywords={text-shadow, text-direction, background-attachement, background-size, font, font-family, font-size, font-style, font-weight, @font-face, letter-spacing, line-height, text-align, text-decoration, text-indent, background, background-color, background-image, background-position, background-repeat, box-shadow, color, opacity, border, border-color, border-width, border-style, border-top, border-left, border-right, border-bottom, border-image, border-radius, padding, padding-bottom, padding-left, padding-right, padding-bottom, margin, margin-bottom, margin-left, margin-right, margin-bottom, height, max-height, min-height, width, max-width, min-width, bottom, left, right, top, clear, display, float, overflow, position, visibility, z-index, list-style, list-style-image, list-style-type, animation, filter, perspective, transform, transition ,a, link, visited, focus, hover, active, checked, first-letter, first-line, before, after, cursor, first-child, font-style,color,background-image:,margin,padding,font,weight,display,position,top,left,right,bottom,list,style,border,size,white,space,min,width, transition:, transform:, transition-property, transition-duration, transition-timing-function},	
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  alsoletter={:},
+  alsodigit={-},
+	literate=%
+    {:}{{\textcolor{black}{:}}}1,  % Treat ':' as a regular symbol, not part of a keyword
+}
+
+\lstdefinelanguage{javascript}{
+	keywords={let, typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywords={class, export, boolean, throw, implements, import, this},
+	ndkeywordstyle=\color{darkgray}\bfseries,
+	identifierstyle=\color{black},
+	sensitive=false,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{purple}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	morestring=[b]',
+	morestring=[b]"
+}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 21-10-24}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+\subsection{JavaScript}
+Il linguaggio Javascript è fondamentale allo sviluppo web moderno.
+Il Javascript è un linguaggio di scripting (oggi perlopiù compilato JIT) orientato agli oggetti (attraverso il paradigma dei prototipi), a tipizzazione debole.
+Viene usato principalmente come linguaggio di scripting lato client, anche se alcuni framework permettono di usarlo come lingaggio lato server (Node.js).
+
+Viene introdotto nel 1996 da Brendan Eich per Netscape Navigator (oggi Firefox).
+Nel 1997, l'ECMA standardizza l'ECMAScript, che è sià un sottoinsieme che un sovrainsieme del Javascript.
+L'ultima versione di rilievo in quanto a cambiamenti è l'ES6 (ha introdotto classi, iteratori e promesse), mentre la più recente è l'ES11 (o ES2020).
+
+In Javascript una \textbf{variabile} è un'oggetto che può avere proprietà e metodi.
+Anche una funzione è considerata un'oggetto.
+
+\subsubsection{Scripting lato client}
+Per scripting lato client si intende codice che viene scaricato e quindi eseguito localmente sulla macchina client, e non sul server e restituito sotto forma di risposte HTTP.
+
+\begin{itemize}
+	\item \textbf{Vantaggi:}
+		\begin{itemize}
+			\item Elaborazione in locale significa meno carico sul server;
+			\item Il client può rispondere più velocemente all'utente di quanto potrebbe farlo un ciclo richiesta-risposta HTTP da parte del server;
+			\item Javascript può interagire direttamente con l'HTML della pagina, creando un'esperienza di sviluppo più simile a quella del software desktop.
+		\end{itemize}
+	\item \textbf{Svantaggi:}
+		\begin{itemize}
+			\item Non c'è garanzia che il client abbia abilitato Javascript, cioè ogni funzionalità assolutamente necssaria deve avere ridondanze lato server;
+			\item Le pagine che usano il Javascript in maniera massiccia sono difficili da mantenere;
+			\item Javascript non tollera errori. Se i file HTML e CSS possono essere invalidi, il browser annullerà l'esecuzione nel caso di errori del codice Javascript;
+			\item Javascript è correntemente supportato da quasi tutti i browser, ma gli standard e le API sono in continua evoluzione. Questo significa che le ultime funzionalità non potrebbero essere disponibili subito su tutti i browser.
+		\end{itemize}
+\end{itemize}
+
+\subsection{Javascript e HTML}
+
+Il javascript può essere inserito in diversi modi nei nostri documenti HTML:
+\begin{itemize}
+	\item \textbf{Inline:} si riferisce alla pratica di inserire del codice Javascript direttamente all'interno di attributi di elementi HTML. Ad esempio:
+\begin{lstlisting}[language=html, style=codestyle]	
+<a href="JavaScript:OpenWindow();">for more info</a>
+<input type="button" onClick="alert('Are you sure?');"/>
+\end{lstlisting}
+	\item \textbf{Embedded:} contenuto all'interno dell'elemento \lstinline|script|
+\begin{lstlisting}[language=html, style=codestyle]	
+<script>
+	alert("Ciao vecchio!");
+</script>
+\end{lstlisting}
+	\item \textbf{Esterno:} sempre indicato dall'elemento \lstinline|script|, ma per riferimento, e contenuto effettivamente in un file separato.
+\begin{lstlisting}[language=html, style=codestyle]	
+<script src="greeting.js"</script>
+\end{lstlisting}
+\end{itemize}
+
+\subsubsection{Utenti senza Javascript}
+Nel caso l'utente non voglia usare Javascript, si può usare l'elemento \lstinline|noscript|, che viene abilitato solamente nel caso Javascript sia disattivato.
+
+\subsection{Variabili e tipi di dato}
+Una variabile in Javascript è debolmente tipizzata, ergo non bisogna dichiararne il tipo.
+Si usano le keyword \lstinline|var|, \lstinline|const| (per variabili costanti) o \lstinline|let|.
+L'assegnamento può avvenire in qualsiasi momento co l'operatore \lstinline|=|.
+
+Esistono due tipi di dato:
+\begin{itemize}
+	\item \textbf{tipi riferimento:} cioè gli oggetti. Contengono effettivamente riferimenti al blocco di dati che contiene l'oggetto;
+	\item \textbf{tipi primitivi:} alcuni tipi speciali, che possono comunque essere usati come oggetti. Vengono solitamente immagazzinati direttamente in memoria.
+		Questi sono:
+		\begin{itemize}
+			\item \textbf{Booleani}, vero o falso;
+			\item \textbf{Numeri}, solitamente double precision su 64 bit;
+			\item \textbf{Stringhe}, di caratteri delimitate da \lstinline|'| o \lstinline|"|;
+			\item \textbf{Null}, il tipo nullo;
+			\item \textbf{Undefined}, il tipo non definito (non inizializzato);
+			\item \textbf{Simboli}, nuovo in ES2015, rappresenta un valore unico che può essere usato come chiave.
+		\end{itemize}
+\end{itemize}
+
+\subsubsection{Oggetti predefiniti}
+Oltre ad array e funzioni, esistono altri oggetti predefiniti.
+Alcuni dei più usati sono Object, Function, Boolean, Error, Number, Math, Date, String e Regexp.
+Useremo alcuni oggetti vitali che non fanno parte della specifica Javascript, ma sono comunque supportati dal browser: questi sono window, console e document.
+
+\subsubsection{Concatenazione}
+Per cooncatenare le stringhe si usa l'operatore \lstinline|+|:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+const country = "France";
+const city = "Paris";
+let msg = city + " is the capital of " + country;
+\end{lstlisting}
+
+\subsubsection{Condizionali}
+Esistono i condizionali a cui siamo abituati dal C++, delimitati da graffe.
+Notiamo, negli operatori di confronto, i due:
+\begin{itemize}
+	\item \lstinline|===|, uguaglianza \textbf{strict}, controlla uguaglianze di tipo e valore (quindi dà falso da tipi uguali in valore ma che richiedono conversioni);
+	\item \lstinline|!==|, diseguaglianza \textbf{strict}, come sopra ma con la diseguaglianza.
+\end{itemize}
+
+\subsubsection{Vero e falso}
+In Javascript, ogni oggetto ha un valore \lstinline|true| o \lstinline|false| predefinito.
+Tutti i valori sono \lstinline|true| tranne \lstinline|Null|, \lstinline|""|, \lstinline|0|, \lstinline|NaN| e \lstinline|undefined|.
+
+\subsubsection{Gestione delle eccezioni}
+Sono previste gestioni delle eccezioni, con i blocchi try-catch del C++
+\begin{lstlisting}[language=javascript, style=codestyle]	
+try {
+	funzione_maligna("Ciao");
+}
+catch(err) {
+	alert("Error: " + err);
+}
+\end{lstlisting}
+
+\subsubsection{Array}
+Le arrey possono essere create come letterali, o attraverso la funzione costruttore:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+const countries = [ "Canada", "France", "Italy" ];
+const days = new Array("Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom");
+\end{lstlisting}
+
+Sono previsti anche i loop for-each:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+for(let day of days) {
+	// ...
+}
+\end{lstlisting}
+
+Si possono \textbf{destrutturare} array attraverso l'operatore di accesso (\lstinline|[0]|, ...), o in sequenza come:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+primo = array[0];
+secondo = array[1];
+// oppure:
+let [primo, secondo] = array;
+\end{lstlisting}
+
+\subsubsection{Oggetti}
+Gli oggetti in Javascript vengono gestiti attraverso il paradigma a prototipi, cioè nuovi oggetti vengono creati non dalle classi, ma da altri oggetti.
+Un oggett è composto da un'insieme di coppie chiave-valore dette \textbf{properietà}.
+
+Il modo più tipico di accedere ad un oggetto è attraverso la notazione letterale:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+const oggetto = {
+	chiave1: valore1,
+	// ...
+	chiaveN: valoreN
+}
+\end{lstlisting}
+
+Si possono poi usare o l'operatore punto o le parentesi quadre:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+oggetto.chiave1;
+ogetto["chiave1"];
+\end{lstlisting}
+
+Le proprietà possono poi essere \textbf{annidate}:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+const country1 = {
+	name: "Canada",
+	languages: { "English", "French" },
+	capital: {
+		name: "Ottawa",
+		population: "400000"
+	}
+	// ...
+}
+\end{lstlisting}
+con array o altri oggetti.
+
+Si possono, come le array, \textbf{destrutturare} gli oggetti con la notazione comoposta:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+let {id, title} = photo;
+let {id, title, location:{country, city}}
+\end{lstlisting}
+
+\subsubsection{Spread}
+Si può usare la sintassi di \textbf{spread} per copiare oggetti da un'array ad un altra. Ad esempio:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+const foo = {name: client.name, country: photo.country};
+\end{lstlisting}
+
+\subsubsection{Notazione JSON}
+JSON sta per Javascript Object Notation, ed è un modo, analogo all'XML, di rappresentare oggetti del Javascript:
+La differenza principale fra il Javascript e il JSON e che le proprietà sono racchiuse fra virgolette:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+const obj = '{
+	"name1": "value1",
+	// ...
+	"nameN": "valueN"
+}';
+\end{lstlisting}
+
+Gli oggetti JSON vengono letti attraverso l'oggetto predefinito JSON:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+text = '{
+	"name1": "value1",
+	// ...
+	"nameN": "valueN"
+}';
+const obj = JSON.parse(text);
+console.log(obj.name1);
+\end{lstlisting}
+
+Il JSON viene usato oggi per rappresentare dati strutturati anche al di fuori del web.
+
+\subsubsection{Funzioni come oggetti}
+Le funzioni in Javascript vengono definite con la parola chiave \lstinline|function|, seguita dalla nome di funzione ed eventuali parametri.
+Come in Python, le funzioni non richiedono né un tipo di ritorno né i tipi degli argomenti.
+Vediamo un'esempio di \textbf{dichiarazione di funzione}:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+function subtotal(price, quantity) {
+	return price * quantity;
+	//ci si aspetta che prenda due numeri e restituisca un'altro numero
+}
+\end{lstlisting}
+
+Potremo invocare questa funzione come:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+let result = subtotal(2, 3);
+\end{lstlisting}
+
+Si possono definire anche \textbf{funzioni espressione}, o  \textit{funzioni anonime}. 
+Questo perchè, in Javascript, una funzione è essenzialmente un'oggetto:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+const warn = function(msg) { alert(msg); };
+warn("Questo non restituisce nulla");
+\end{lstlisting}
+
+Si possono specificare \textbf{valori di default}. Ad esempio:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+function foo(a, b) {
+	return a + b;
+}
+
+let bar = foo(3); // bar e' NaN
+
+function foo1(a = 10, b = 0) {
+	return a + b;
+}
+
+let bar = foo1(3); //bar e' 3
+\end{lstlisting}
+
+In Javascript possono esistere funzioni con \textbf{numero variabile di argomenti}, usando la parola chiave \lstinline|args| e l'operatore di \textbf{rest} (\lstinline|...|). Ad esempio, si può avere:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+function conc(...args) {
+	let s = "";
+	for(let a of args){
+		s += a + " ";
+		return s;
+	}
+}
+\end{lstlisting}
+
+Si possono poi avere \textbf{funzioni annidate}, quando abbiamo bisogno di funzioni dentro altre funzioni:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+function calculateTotal(price, quantity) {
+	let subtotal = price * quantity;
+	return subtotal + calculateTax(subtotal);
+
+	function calculateTax(subtotal) {
+		let rate = 0.05;
+		return subtotal * rate;
+	}
+}
+\end{lstlisting}
+
+Attraverso un procedimento di \textbf{hoisting}, la funzione \lstinline|calculateTax| viene automaticamente spostata all'inizio del suo ambito di visibilità corrente (la funzione \lstinline|calculateTotal|)
+
+Possiamo quindi passare le stesse funzioni come argomenti ad altre funzioni, ovvero fornire delle cosiddette \textbf{funzioni callback} (\textit{funzioni di "richiamo"}). Ad esempio:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+const calculateTotal = function(price, quantity, tax) {
+	subtotal = price * quantity:
+	return subtotal + tax(subtotal)
+}
+
+const calcTax = function calculateTax() {
+		let rate = 0.05;
+		return subtotal * rate;
+}
+
+calculateTotal(2, 5, calcTax);
+\end{lstlisting}
+
+\subsubsection{Metodi}
+Quelli che erano \textbf{metodi} negli altri linguaggi, non sono altro che proprietà funzione in Javascript.
+Un'oggetto può quindi avere funzioni definite come proprietà al suo interno.
+Si può usare, come in C++, la parola chiave \lstinline|this| per riferirsi all'oggetto stesso.
+
+Si possono avere \textbf{funzioni costruttrici}, cioè funzioni che si usano con la parola chiave \lstinline|new| per creare nuovi oggetti.
+Queste usano, al loro interno, la parola chiave \lstinline|this| per riferirsi all'oggetto creato.
+
+\begin{lstlisting}[language=javascript, style=codestyle]	
+function Customer(name, address) {
+	this.name = name;
+	this.address = address;
+	// ...
+}
+
+let customer = new Customer("Marietto Stromboldi", "Via del Guzzuldo 56");
+\end{lstlisting}
+
+Quello che succede quando si esegue questo codice è che la parola chiave \lstinline|new| crea un'oggetto vuoto, e la funzione costruttrice popola poi questo oggetti con gli attributi necessari.
+
+\subsubsection{Funzioni freccia}
+Le \textbf{funzioni freccia}, introdotte in ES6, forniscono una sintassi più concisa per le funzioni anonime.
+Forniscono anche un metodo per gestire gli errori di visibilità causati dalla parola chiave \lstinline|this|.
+Per iniziare, consideriamo una semplice espressione di funzione:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+const taxRate = function() { return 0.05; };
+// questo può diventare
+const taxRate = () => 0.05;
+\end{lstlisting}
+
+Esistono poi diverse varianti, che ci permettono di esprimere funzioni con livelli variabili di complessità:
+
+\begin{table}[h!]
+	\center \rowcolors{2}{white}{black!10}
+	\begin{tabular} { c | c }
+		\bfseries Sintassi tradizionale & \bfseries Sintassi freccia \\
+		\hline 
+
+\begin{lstlisting}[language=javascript, style=codestyle]	
+function() {
+		// statement
+}
+\end{lstlisting} &
+\begin{lstlisting}[language=javascript, style=codestyle]	
+() => {
+	// statement
+}
+\end{lstlisting} \\
+
+\begin{lstlisting}[language=javascript, style=codestyle]	
+function(a, b) {
+		// statement
+}
+\end{lstlisting} &
+\begin{lstlisting}[language=javascript, style=codestyle]	
+(a, b) => {
+	// statement
+}
+\end{lstlisting} \\
+
+\begin{lstlisting}[language=javascript, style=codestyle]	
+function() {
+		call();
+}
+\end{lstlisting} &
+\begin{lstlisting}[language=javascript, style=codestyle]	
+() => {
+	call();
+}
+\end{lstlisting} \\
+
+\begin{lstlisting}[language=javascript, style=codestyle]	
+function(a) {
+	return value;
+}
+\end{lstlisting} &
+\begin{lstlisting}[language=javascript, style=codestyle]	
+(a) => value; 
+// o addirittura
+a => value;
+\end{lstlisting} \\
+	\end{tabular}
+\end{table}
+
+Notiamo che nel caso precedente abbiamo usato l'ultima contrazione (senza argomenti). 
+
+Le funzioni freccia non forniscono un valore specifico a \lstinline|this|, ma usano quello dell'ambito parentale corrente.
+
+\subsubsection{Output}
+Ci vengono fornite alcune funzioni di output predefinite:
+\begin{itemize}
+	\item \lstinline|alert()|: visualizza un messaggio di errore o allerta;
+	\item \lstinline|prompt()|: visualizza un messaggio con un campo di input di testo;
+	\item \lstinline|confirm()|: visualizza un messaggio con restituzione di un opzione si/no.
+\end{itemize}
+
+Alternativamente, si può usare:
+\begin{itemize}
+	\item \lstinline|document.write()|: scrive contenuti direttamente nel file HTML;
+	\item \lstinline|console.log()|: visualizza contenuti nella console Javascript del browser.
+\end{itemize}
+
+\end{document}
