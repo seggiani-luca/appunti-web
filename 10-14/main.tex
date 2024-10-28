@@ -1,0 +1,619 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+% imposta il titolo
+\title{Appunti Progettazione Web}
+\author{Luca Seggiani}
+\date{2024}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+\lstdefinelanguage{css}{
+  keywords={text-shadow, text-direction, background-attachement, background-size, font, font-family, font-size, font-style, font-weight, @font-face, letter-spacing, line-height, text-align, text-decoration, text-indent, background, background-color, background-image, background-position, background-repeat, box-shadow, color, opacity, border, border-color, border-width, border-style, border-top, border-left, border-right, border-bottom, border-image, border-radius, padding, padding-bottom, padding-left, padding-right, padding-bottom, margin, margin-bottom, margin-left, margin-right, margin-bottom, height, max-height, min-height, width, max-width, min-width, bottom, left, right, top, clear, display, float, overflow, position, visibility, z-index, list-style, list-style-image, list-style-type, animation, filter, perspective, transform, transition ,a, link, visited, focus, hover, active, checked, first-letter, first-line, before, after, cursor, first-child, font-style,color,background-image:,margin,padding,font,weight,display,position,top,left,right,bottom,list,style,border,size,white,space,min,width, transition:, transform:, transition-property, transition-duration, transition-timing-function},	
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  alsoletter={:},
+  alsodigit={-},
+	literate=%
+    {:}{{\textcolor{black}{:}}}1,  % Treat ':' as a regular symbol, not part of a keyword
+}
+
+\lstdefinelanguage{javascript}{
+	keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywords={class, export, boolean, throw, implements, import, this},
+	ndkeywordstyle=\color{darkgray}\bfseries,
+	identifierstyle=\color{black},
+	sensitive=false,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{purple}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	morestring=[b]',
+	morestring=[b]"
+}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 14-10-24}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+\lstset{language=html, style=codestyle}
+
+% testo
+\subsection{Form}
+I form in HTML forniscono all'utente un modo di fornire dati al web server, ergo di digitare testo, password, impostare opzioni, ecc...
+In un ciclo di esecuzione standard, l'utente invia una richiesta HTTP al server, richiedendo un comune documento HTML.
+Il server risponde con un documento che contiene un form, che viene compilato dall'utente, e che viene quindi restituito al server attraverso attraverso una richiesta GET o POST.
+I dati ottenuti dal server vengono quindi elaborati attraverso script in PHP o altre tecnologie.
+
+Si noti che l'elaborazione dei dati del form può essere effettuata anche dal browser attraverso, ad esempio, codice JavaScript.
+
+La dichiarazione di form si fa attraverso l'elemento \lstinline|form|.
+Questo elemento comprende di due attributi essenziali:
+\begin{itemize}
+	\item \lstinline|action|: specifica l'URL della risora lato server che si occuperà dell'elaborazione del form (ad esempio uno script in PHP);
+	\item \lstinline|method|: specifica il modo in cui la stringa di query verrà trasmessa dal browser al server.
+		La \textbf{stringa di query} rappresenta le informazioni ottenute dal form sotto forma di una lista di coppie chiavi-valore in forma \lstinline|key=value| separata da \lstinline|&|.
+		Ad esempio, una possibile stringa di query dal form di registrazione di un utente potrebbe essere:
+		\lstinline|nome=pippo&cognome=pippo&codicefiscale=pppppp...|.
+
+		Esistono due metodi di trasmissione delle stringhe di query:
+		\begin{itemize}
+			\item \textbf{GET}: si appende la stringa di query, preceduta da un \lstinline|?|, all'URL della risorsa ottenuta dal sito. 
+			In questo modo, la richiesta è visible nella barra di ricerca del browser, e i dati vengono immagazzinati nella cache (non solo del browser, ma anche dei proxy). Inoltre, si ha un limite, solitamente di 2048 caratteri, sulla lunghezza della stringa. Bisogna quindi usare questo metodo nel caso si stiano richiedendo dati dal server o comunque si stiano trasmettendo dati non sensibili;
+		\item \textbf{POST}: la stringa è inviata sotto forma di una richiesta POST, che è quindi nascosta dall'utente, solitamente non immagazzinata in cache, e può contenere dati in formato binario. Si usa quindi questo metodo nel caso si debbano inviare informazioni sensibili come password, ecc...
+		\end{itemize}
+\end{itemize}
+
+\subsubsection{Elementi di controllo form}
+Esistono diversi elementi HTML per il controllo dei form:
+\begin{itemize}
+	\item \lstinline|button|: definisce un pulsante cliccabile dall'utente, con l'opzione di definire un'azione attraverso l'attributo \lstinline|type|.
+	Un pulsante può come vedremo, anche chiamare una funzione JavaSript attraverso l'attributo \lstinline|onclick|.
+		
+	Esistono, nello specifico, due modi principali di definire un pulsante:
+	\begin{itemize}
+		\item \lstinline|input|: l'elemento \lstinline|input| diventa un pulsante quando si usa l'attributo \lstinline|type| con valore \lstinline|submit|, \lstinline|reset| o \lstinline|button|. Nel primo caso si ha un pulsante per l'invio del form (attraverso la modalità stabilita in \lstinline|method|), nel secondo un pulsante per il reset dei dati inseriti finora nel form, e infine nel terzo un pulsante qualsiasi con del testo definito dall'attributo \lstinline|value|.
+		Si può anche definire un'immagine cliccabile attraverso il tipo \lstinline|image|.
+		In questo caso si specifica l'immagine con l'attributo \lstinline|src|.
+		Esempi di questi casi sono:
+\begin{lstlisting}[language=html, style=codestyle]	
+/* un pulsante per il submit */
+<input type="submit" /> 
+/* un pulsante per il reset */
+<input type="reset" /> 
+/* un pulsante qualsiasi */
+<input type="button" value="Cliccami!"/>
+/* un immagine cliccabile */
+<input type="image" src="images/icons/calendar.png"/>
+\end{lstlisting}
+		\item \lstinline|button|: l'elemento \lstinline|button| è specifico ai pulsanti, e permette più customizzazione (si possono usare tag bold, enfasi, ecc...). In questo caso, il tipo del pulsante (cioè l'azione compiuta) si indica sempre con l'attributo \lstinline|type|.
+		Un esempio è:
+\begin{lstlisting}[language=html, style=codestyle]	
+<button type="submit">
+<img src="images/icons/edit.png" alt="Modifica"/>
+</button>
+\end{lstlisting}
+	\end{itemize}
+
+\item \lstinline|datalist|: definisce una lista di elementi da essere usata con altri elementi di controllo form, indicandola attraverso l'apposito attributo \lstinline|id|. Ad esempio:
+\begin{lstlisting}[language=html, style=codestyle]	
+<datalist id="tipo-prodotto">
+	<option value="Amplificazione e PA">
+	<option value="Effetti">
+	<option value="Luci e proiettori">
+	<option value="Macchine del fumo">
+</datalist>
+\end{lstlisting}
+	
+	\item \lstinline|fieldset|: raggruppa più elementi in un form, solitamente accompagnato da un'elemento \lstinline|legend|.
+
+	\item \lstinline|input|: definisce un elemento di input. Molti altri elementi si possono ridurre ad elementi di input, tra cui, come abbiamo visto, i pulsanti. Nello specifico possiamo individuare, riguardo al testo:
+		\begin{itemize}
+			\item \lstinline|text|: una casella di testo su una sola linea per input generico;
+			\item \lstinline|password|: una casella di testo su una sola linea per password, che occulta i caratteri inseriti dall'utente;
+			\item \lstinline|search|: una casella di testo su una sola linea per query di ricerca (ad esempio la barra di inserimento di un motore di ricerca);
+			\item \lstinline|email|: una casella per indirizzi di posta elettronica;
+			\item \lstinline|tel|: una casella per numeri di telefono;
+			\item \lstinline|url|: una casella per inserire URL.
+		\end{itemize}
+
+	Sono disponibili poi attributi avanzati, tra cui il \lstinline|pattern|, che permette di definire un'espressione regolare che l'ingresso testuale dell'utente dovrebbe rispettare, e il \lstinline|list|, che permette di riferirsi ad una \lstinline|datalist| definita precedentemente per l'autocompletamento del testo digitato.
+Per altri tipi di validazioni esistono poi i tipi \lstinline|number| e \lstinline|slider|, che supportano gli attributi \lstinline|min|, \lstinline|max| e \lstinline|step| (perlopiù usati su input di tipo numerico):
+\begin{lstlisting}[language=html, style=codestyle]	
+<label>Eta'</label>
+<input type="number" min="1" max="99" name="age"/>
+
+<label>Quanto sei soddisfatto dei nostri servizi?</label>
+<p>
+Per niente
+<input type="slider" min="0" max="100" step="1" name="satisf">
+Molto
+</p>
+\end{lstlisting}
+
+	Per quanto riguarda interruttori di vario tipo, invece, si ha:
+	\begin{itemize}
+		\item \lstinline|radio|: permette di definire radio button, cioè pulsanti a selezione mutualmente esclusiva, distinguendo attraverso l'attributo \lstinline|name|:
+\begin{lstlisting}[language=html, style=codestyle]	
+<input type="radio" name="dove">A casa</input>
+<input type="radio" name="dove">A lavoro</input>
+<input type="radio" name="dove">A scuola</input>
+\end{lstlisting}
+	Supporta anche gli attributi \lstinline|value|, che ha lo stesso funzionamento che ha in \lstinline|option|, e \lstinline|checked|, per specificare un valore di default.
+	
+		\item \lstinline|checkbox|: permette di definire checkbox per ottenere risposte si/no dagli utenti. Si possono raggruppare checkbox con l'attributo \lstinline|name|, e raggrupparle con l'attributo \lstinline|name|, come accadeva per i radio button:
+\begin{lstlisting}[language=html, style=codestyle]	
+<label>Accetto le condizioni</label>
+<input type="checkbox" name="accept"/>
+\end{lstlisting}
+
+Esistono poi tipi di input specializzati, fra cui notiamo:
+\begin{itemize}
+	\item \lstinline|hidden|: una casella di input nascosta;
+	\item \lstinline|file|: apre una finestra per la selezione di file dal filesystem della macchina dell'utente;
+	\item \lstinline|color|: apre un selettore di colori in formato RGB o HSL;
+	\item \lstinline|date|: esistono diversi tipi di selettori temporali fra cui:
+		\begin{itemize}
+			\item \lstinline|date|: una data semplice in formato \lstinline|yyyy-mm-dd|;
+			\item \lstinline|time|: un orario in formato \lstinline|HH:MM:SS|;
+			\item \lstinline|datetime|: una combinazione di data e orario comprendente di un fuso orario;
+			\item \lstinline|datetime-local|: una combinazione di data e orario senza specifica del fuso orario;
+			\item \lstinline|month|: un mese in formato \lstinline|yyyy-mm|;
+			\item \lstinline|week|: una settimana dell'anno in formato \lstinline|yyyy-WW#|.
+		\end{itemize}
+	\item \lstinline|progress| e \lstinline|meter|: elementi che indicano il progresso di una certa operazione, vanno scriptati attraverso JavaScript;
+	\item \lstinline|output|: contiene l'output di un calcolo (ad esempio di una calcolatrice);
+	\item \lstinline|keygen|: contiene una chiave privata per la crittografia a chiavi pubbliche.
+\end{itemize}
+
+\end{itemize}
+
+	\item \lstinline|textarea|: definisce una casella di testo su più linee, il cui numero può essere specificato con l'attributo \lstinline|rows|. Risulta quindi più efficace di un elemento \lstinline|input| di tipo \lstinline|text| per testo di dimensioni più grandi. Si può definire del testo predefinito fra i tag stessi della \lstinline|textarea|, o attraverso l'attributo \lstinline|placeholder|.
+\begin{lstlisting}[language=html, style=codestyle]	
+<textarea>
+	Inserisci un po' di testo
+</textarea>
+/* equivale a: */
+<textarea placeholder="Inserisci un po' di testo">
+</textarea>
+\end{lstlisting}
+
+	\item \lstinline|label|: definisce un'etichetta testuale per un'elemento di input.
+		Solitamente si raggruppa una \lstinline|label| con l'elemento corrispondente, all'interno di un paragrafo:
+\begin{lstlisting}[language=html, style=codestyle]	
+<p>
+	<label>Nome</label>
+	<input type="text"/>
+</p>
+<p>
+<p>
+	<label>Cognome</label>
+	<input type="text"/>
+</p>
+	<label>Codice Fiscale</label>
+	<input type="text" pattern="^[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]$"/>
+</p>
+\end{lstlisting}
+
+\item \lstinline|legend|: definisce un nome per un \lstinline|fieldsest|. 
+
+\item \lstinline|option|: definisce un'opzione in una lista multi-item (come ad esempio un \lstinline|select| o un \lstinline|datalist|). Esiste anche \lstinline|optgroup|, che definisce un insieme di opzioni correlate fra di loro in una lista multi-item sotto il nome \lstinline|label|. Si può definire un valore attraverso l'attributo \lstinline|value| da spedire al server in caso di invio del form, altrimenti si usa il testo contenuto fra i tag.
+\begin{lstlisting}[language=html, style=codestyle]	
+<select name="scelte">
+	<optgroup label="Pizza">
+		<option>Margherita</option>
+		<option>Capricciosa</option>
+	</optgroup>
+	<optgroup label="Primi">
+		<option>Pasta</option>
+		<option>Polenta</option>
+	</optgroup>
+	...
+</select>
+/* oppure */
+<select name="scelte">
+	<optgroup label="Pizza">
+		<option value="pizza-margherita">Margherita</option>
+		<option value="pizza-capricciosa">Capricciosa</option>
+	</optgroup>
+	<optgroup label="Primi">
+		<option value="primi-pasta">Pasta</option>
+		<option value="primi-polenta">Polenta</option>
+	</optgroup>
+	...
+</select>
+\end{lstlisting}
+
+\item \lstinline|select|: definisce un selettore multilinea per una lista multi-item. Gli elementi della lista vengono definiti attraverso i tag \lstinline|option| e \lstinline|optgroup|.
+
+\end{itemize}
+
+\subsection{Layout in CSS}
+Vediamo adesso le funzionalità che il CSS mette a disposizione per modificare il layout, cioè cambiare le posizioni in cui gli elementi vengono disposti sulla pagina.
+
+\subsubsection{Controllo di flusso}
+Chiamiamo \textbf{flusso normale} il modo in cui il browser dispone gli elementi di norma.
+Possiamo distinguere fra due classi di elementi per quanto riguarda il flusso normale:
+\begin{itemize}
+	\item \textbf{Elementi blocco:} sono contenuti, uno ad uno, su una nuova linea.
+		Sono esempi di elementi blocco \lstinline|p|, \lstinline|div|, \lstinline|h1| - \lstinline|h6|, \lstinline|ul|, \lstinline|ol|, \lstinline|table|, ecc...
+	\item \textbf{Elementi inline:} sono visualizzati sulla stessa linea se possibile, altrimenti sulla linea successiva (cioè tornano a capo come il testo). 
+		Sono esempi di elementi inline \lstinline|em|, \lstinline|a|, \lstinline|img|, \lstinline|span|, ecc...
+\end{itemize}
+Notiamo come \lstinline|div| e \lstinline|span| sono gli elementi di "default" che si dispongono, rispettivamente, a blocco e in linea, cioè che non hanno altra funzione se non di indicare la modalità di visualizzazione dei rispettivi figli.
+
+Si può usare il CSS per modificare le modalità di visualizzazione degli elementi, attraverso la proprietà \lstinline|display|. 
+Ad esempio, per visualizzare uno span a blocco e un elemento di lista in linea, diremo:
+\begin{lstlisting}[language=css, style=codestyle]	
+span { display: block; }
+li { display: inline; }
+\end{lstlisting}
+
+\subsubsection{Posizionamento}
+Il CSS definisce la proprietà specifica \lstinline|position| per il posizionamento di elementi rispetto al flusso normale.
+Una volta specificata la modalità di posizionamento, si indica la posizione vera e propria dell'elemento interessato attraverso le proprietà \lstinline|top|, \lstinline|bottom|, \lstinline|left| e \lstinline|right|, che indicano rispettivamente la posizione dall'alto e da sinistra.
+I valori ammessi sono:
+\begin{itemize}
+	\item \lstinline|absolute|: in posizionamento assoluto, un'oggetto viene rimosso completamente dal flusso normale. 
+	Ciò significa che il resto della pagina viene disposto secondo le regole del flusso normale, o secondo regole CSS, ma comunque ignorando l'elemento in questione.
+	La posizione effettiva dell'elemento viene decisa relativamente (in modo poco intuitivo rispetto al nome) al primo antenato posizionato;
+	\item \lstinline|fixed|: in posizionamento fisso, un'elemento resta nella stessa posizione sulla pagina a prescindere dallo scorrimento verticale. Questa modalità e quindi usata per banner, intestazioni, o comunque elementi che devono essere sempre visibili;-
+	\item \lstinline|relative|: in posizionamento relativo, l'elemento viene spostato come in posizionamento assoluto, ma il flusso normale prosegue come se l'oggetto fosse sempre al suo posto.
+		Questo significa che l'elemento può effettivamente essere spostato \textit{rispetto} alla sua posizione iniziale senza alterare il resto della pagina;
+	\item \lstinline|static|: è il valore predefinito, cioè equivale al flusso normale. 
+\end{itemize}
+
+Bisogna notare che i posizionamenti, sia assoluti che relativi, avvengono all'interno di un certo \textbf{contesto di posizionamento}, che abbiamo detto è il primo antenato posizionato. 
+In caso non ci sia un antenato posizionato, il contesto di posizionamento è la pagina stessa.
+
+\subsubsection{Indice Z}
+Un attributo che si applica \textit{soltanto} a elementi posizionati, e \textit{soltanto} rispetto agli elementi su cui sono posizionati, è \lstinline|z-index|, che indica l'indice di profondità di un elemento. 
+Elementi con indice Z più alto vengono disposti sopra agli altri, e di contro elementi con indice Z più basso vengono disposti sotto gli altri. 
+
+\subsubsection{Elementi fluttuanti}
+Un elemento fluttuante viene diposto a sinistra (\lstinline|float: left|) o a destra (\lstinline|float: right|) del flusso normale, che viene a disporsi di fianco all'elemento fluttuante.
+Questa modalità è utile per elementi che devono apparire all'interno del flusso del testo, come ad esempio immagini o tabelle.
+Si nota che un elemento fluttuante deve avere una larghezza specificata minore del 100\%, in quanto altrimenti andrà a coprire di default l'intera larghezza della pagina (quindi rendendo inutile il fatto che sia fluttuante).
+
+Più elementi fluttuanti cercano di disporsi sulla stessa linea.
+Nel caso un elemento debba essere il primo di una linea, si usa la proprietà \lstinline|clear|, sempre con valori \lstinline|left| o \lstinline|right|, che impedisce a elementi fluttuanti di disporsi rispettivamente a sinistra o a destra dell'elemento indicato.
+
+Nel caso un'elemento fluttuante sia contenuto in un contenitore, affinché questo non si riduca alle sole dimensioni del padding, si deve usare la proprietà \lstinline|overflow| con attributo \lstinline|auto|: questo obbligherà il contenitore ad espandersi fino a contenere qualsiasi elemento fluttuante sia suo figlio, qualunque sia la posizione in cui si vada a trovare.
+
+\subsubsection{Elementi nascosti}
+Si possono nascondere elementi sulla pagina attraverso due metodologie principali: attraverso la proprietà \lstinline|display| con valore \lstinline|none|, o attraverso la proprietà \lstinline|visibility| con valore \lstinline|hidden|. 
+La prima, oltre a rendere invisibile l'elemento, lo rimuove dal flusso, e quindi modifica la disposizione del resto degli elementi sulla pagina.
+La seconda, invece, mantiene il flusso del resto della pagina invariato.
+
+\subsubsection{Flexbox}
+Per realizzare elementi affiancati in maniera più complessa di quanto reso possibile dal meccanismo degli elementi fluttuanti, si usa il Flexible Box Layout Model, o flexbox.
+Un contenitore in modalità di visualizzazione \lstinline|display: flexbox| contiene diversi elementi affiancati, che vanno a disporsi diversamente sulla pagina a seconda delle dimensioni.
+
+Un elemento figlio di un flexbox diventa automaticamente un flex item. 
+Ogni flex item è fornito della proprietà \lstinline|flex-basis|, di default \lstinline|auto|, che indica la dimensione dell'item nel flex box.
+
+La proprietà fondamentale del flexbox è \lstinline|flex-direction|, cioè la direzione di in cui si vanno a disporre gli elementi.
+Questa ha valori:
+\begin{itemize}
+	\item \lstinline|row|: gli elementi si dispongono su una linea orizzontale. è l'impostazione di default;
+	\item \lstinline|row-reverse|: gli elementi si dispongono sempre su una linea orrizontale, ma al contrario;
+	\item \lstinline|column|: gli elementi si dispongono su una linea verticale;
+	\item \lstinline|column-reverse|: gli elementi si dispongono semper su una linea verticale, ma al contrario.
+\end{itemize}
+La direzione verso destra o sinistra (o verso l'alto o il basso) è definita dal tipo di layout del browser, solitamente LTR (Left To Right), ma che può essere RTL (Right To Left) per alcuni locale (ad esempio l'Arabo), o addirittura dall'alto verso il basso (ad esempio nel caso di alcuni font giapponesi).
+
+Di norma, se si hanno troppi elementi per lo spazio disponibile, questi escono dai confini del flexbox.
+Si può ordinare agli elementi di disporsi su più righe nel caso di overflow attraverso la proprietà \lstinline|flex-wrap: wrap|. 
+Si possono combinare direzione e wrap in un unica proprietà, \lstinline|flex-flow|.
+Ad esempio, si può avere \lstinline|flex-flow: column wrap|.
+
+Esiste poi la proprietà \lstinline|flex|, che determina come gli elementi vanno a riempire lo spazio disponibile.
+Si nota che questo si applica di default a layout orizzontali, in quanto su layout verticali bisogna introdurre artificialmente spazio libero (di norma un contenitore si restringerebbe a contenere gli elementi nel minor spazio possibile).
+Si hanno quindi i valori per \lstinline|flex|:
+\begin{itemize}
+	\item \lstinline|initial|: il valore di default di \lstinline|flex| è \lstinline|initial|, che si limita ad affiancare gli elementi da sinistra verso destra;
+	\item \lstinline|auto|: il valore \lstinline|auto| cerca invece di allargare ogni elemento il più possibile in modo da riempire tutto lo spazio possibile.
+
+Implicitamente, questo valore imposta le proprietà dei flex item:
+\begin{itemize}
+	\item \lstinline|flex-grow|, che permette agli elementi di accrescere in dimensioni più della loro \lstinline|flex-basis|, cioè appropiarsi di eventuale spazio libero fornito ad altri elementi;
+	\item \lstinline|flex-shrink|, che permette agli elementi di rimpicciolire in dimensioni più della loro \lstinline|flex-basis|
+\end{itemize}
+In sostanza, la \lstinline|flex-basis|, cioè la dimensione dei figli del flexbox, è ignorata, e questi vengono disposti in modo da riempire lo spazio.
+\end{itemize}
+
+La dimensione di ogni elemento può poi essere modificata attraverso la proprieta \lstinline|flex|, su cui si può definire la dimensione assoluta, o una tripla di valori \lstinline|flex-grow flex-shrink flex|.
+
+\subsubsection{Allineamento nei flexbox}
+Esistono due direzioni di allineamento nei flexbox: quella parallela alla direzione di disposizione degli elementi, e quella perpendicolare.
+Per la prima direzione, si usa \lstinline|justify-content|, che può avere i valori:
+\begin{itemize}
+	\item \lstinline|flex-start|: dispone gli elementi all'inizio del flexbox;
+	\item \lstinline|flex-end|: dispone gli elementi a partire dal fondo del flexbox; 
+	\item \lstinline|center|: mantiene le distanze fra gli elementi inalterate, e li centra semplicemente sull'asse verticale o orizzontale di scorrimento;
+	\item \lstinline|space-around|: allarga le distanze fra gli elementi in modo da riempire tutto lo spazio disponibile, mantenendo i margini;
+	\item \lstinline|space-between|: allarga le distanze fra gli elementi in modod da riempire tutto lo spazio disponibile, senza lasciare margini;
+	\item \lstinline|space-evenly|: come \lstinline|space-around|, ma mantiene lo spazio fra i bordi e i singoli elementi il più uguale possibile.
+\end{itemize}
+
+L'allineamento sulla direzione perpendicolare si fa con \lstinline|align-content|, che ha gli stessi valori visti finora, più il valore \lstinline|stretch|, che estende gli elementi in dimensioni fino a riempire lo spazio perpendicolare disponibile.
+
+Si ha poi che ogni singolo elemento può dichiarare il suo \lstinline|align-self|, cioè la sua modalità personale di allineamento.
+
+\subsubsection{Griglie}
+Il modulo per le griglie del CSS permette di creare layout a griglia impostando diversi parametri.
+Innanzitutto, qualsiasi elemento in modalità di visualizzazione \lstinline|grid| o \lstinline|grid-inline| diventa automaticamente una griglia CSS.
+
+A questo punto si possono specificare le proprietà di base:
+\begin{itemize}
+	\item \lstinline|grid-template-columns|: indica la larghezza delle colonne della griglia.
+		Per questa misura è comodo usare l'unita \lstinline|fr|, cioè frazionaria, che indica quale frazione dello spazio disponibile ogni colonna dovrebbe usare.
+
+		CSS fornisce poi la funzione \lstinline|repeat()| per creare layout a griglia con un numero arbitrario di colonne.
+		Questa può assumere diverse forme:
+		\begin{itemize}
+			\item \lstinline|repeat(num-repeat, width)|: indica \lstinline|num-repeat| colonne di larghezza \lstinline|width|;
+			\item \lstinline|repeat(num-repeat, width1, width2, ...)|: si possono specificare più larghezze, che anche in questo caso vengono ripetute, complessivamente, \lstinline|num-repeat| volte;
+			\item \lstinline|repeat(auto-fill, width)|: col parametro \lstinline|auto-fill|, le colonne vengono ripetute fino a riempimento dello spazio orizzontale disponibile;
+			\item \lstinline|repeat(auto-fill, minmax(min-width, max-width))|: con la funzione \lstinline|minmax|, si può specificare una dimensione minima e una dimensione massima, rispettivamente di rimpicciolimento e di allargamento degli elementi nella griglia, che verranno quindi ridimensionati in modo da riempire lo spazio nella griglia.
+		\end{itemize}
+
+	\item \lstinline|grid-template-rows|: indica l'altezza delle righe della griglia.
+		Per questa misura è comodo invece usare l'unità \lstinline|px|, se non lasciarla completamente non specificata, in quanto la dimensione verticale della pagina dovrebbe essere decisa dai contenuti che ogni casella della griglia contiene.
+		In ogni caso, è disponibile anche la funzione \lstinline|repeat()| con tutti i possibili parametri visti prima;
+
+	\item \lstinline|gap|: indica i gap, cioè gli spazi, lasciati fra caselle della griglia. Si può usare la proprietà composita \lstinline|gap|, che si aspetta due dimensioni, o le proprietà separate su colonna e riga \lstinline|column-gap| e \lstinline|row-gap|.
+\end{itemize}
+
+Esistono poi proprietà, relativa o alla griglia stessa o ai suoi elementi figli, che specificano la disposizione degli stessi all'interno della griglia.
+Per i singoli elementi, si hanno le proprietà:
+\begin{itemize}
+	\item \lstinline|grid-column-start|: indica la colonna di partenza dell'elemento;
+	\item \lstinline|grid-column-end|: indica l'ultima colonna dell'elemento: si noti che attraverso questa proprietà si possono creare elementi multi-colonna;
+	\item \lstinline|grid-row-start|: indica la prima riga dell'elemento;
+	\item \lstinline|grid-row-end|: indica l'ultima riga dell'elemento: come prima, si noti che attraverso questa proprietà si possono creare elementi multi-riga.
+\end{itemize}
+
+A livello riga, invece, si può usare la proprietà \lstinline|grid-template-areas|, che permette di specificare la posizione di elementi figli, definita per ognuna di essi una specifica \lstinline|grid-area|, attraverso una sintassi intuitiva direttamente nel codice:
+
+\begin{lstlisting}[language=css, style=codestyle]	
+body {
+	display: grid;
+	grid-template-areas:
+		"head	head head"
+		"navi main tang"
+		"mess foot tang";
+
+	grid-template-columns: 1fr 3fr 1fr;
+	grid-template-rows: 80px 1fr 100px;
+	width: 100%;
+	height: 1000px;
+}
+
+header {
+	grid-area: head;
+}
+
+nav {
+	grid-area: navi;
+}
+
+main {
+	grid-area: main;
+}
+
+aside {
+	grid-area: tang;
+}
+
+.mess {
+	grid-area: mess;
+}
+
+footer {
+	grid-area: foot;
+}
+\end{lstlisting}
+
+Infine, il singolo elemento può allinearsi all'interno della casella (o caselle) allocatagli nella griglia attraverso le proprietà \lstinline|align-self| (riguardo all'allineamento verticale) e \lstinline|justify-self| (allineamento orizzontale). Queste supportano i valori:
+\begin{itemize}
+	\item \lstinline|stretch|: l'elemento riempie in dimensioni la casella corrispondente;
+	\item \lstinline|start|: l'elemento si dispone all'inizio della casella corrispondente;
+	\item \lstinline|center|: l'elemento si dispone centralmente alla casella corrispondente;
+	\item \lstinline|end|: l'elemento si dispone in fondo alla casella corrispondente.
+\end{itemize}
+
+Queste proprietà possono essere modificate per tutti gli elementi figli dall'elemento griglia, attraverso le proprietà \lstinline|align-items| e \lstinline|justify-items|.
+
+\subsubsection{Multicolonna}
+CSS permette di realizzare layout multicolonna, cioè a scorrimento del testo su più colonne come quelle che potremmo trovare in un giornale.
+Le proprietà disponibili sono:
+\begin{itemize}
+	\item \lstinline|column-count|: indica il numero di colonne. Di default vale 1, ergo basta impostare questo valore per rendere un'elemento multicolonna;
+	\item \lstinline|column-gap|: indica lo spazio lasciato fra le colonne;
+	\item \lstinline|column-rule-style|, \lstinline|column-rule-width| e \lstinline|column-rule-width|: indicano lo stile, come si farebbe per un \lstinline|border|, di una linea separatrice fra le colonne. Esiste anche la proprietà composita \lstinline|column-rule|;
+	\item \lstinline|column-width|: indica una larghezza (solo suggerita, il browser formatterà come crede necessario il multicolonna) ideale per le colonne. Esiste il composito \lstinline|column| per specificare \lstinline|column-count| e \lstinline|column-width| contestualmente;
+\end{itemize}
+
+Ogni elemento può poi disporsi su più colonne attraverso la proprietà \lstinline|column-span|, che indica appunto su quante colonne dovrebbe disporsi l'elemento.
+
+\subsection{Media query e responsive design}
+Uno dei problemi più grandi dello sviluppo web moderno è quello di creare design che funzionino bene su dispositivi di diverse dimensioni.
+Per rendere questo più semplice, oltre alla possibilita di creare layout \textit{fluidi}, cioè governati da misure percentuali che quindi scalano con la dimensione dello schermo, il CSS mette a disposizione le cosiddette \textbf{media query}.
+Una media query permette di applicare selettivamente alcune regole CSS solamente quando vengono soddisfatte determinate condizioni riguardo all'ambiente di visualizzazione della pagina, fra cui:
+\begin{itemize}
+	\item \lstinline|width|: la larghezza della finestra di visualizzazione;
+	\item \lstinline|height|: l'altezza della finestra di visualizzazione;
+	\item \lstinline|device-width|: la larghezza dello schermo del dispositivo;
+	\item \lstinline|device-height|: l'altezza dello schermo del dispositivo;
+	\item \lstinline|orientation|: l'orientamento dello schermo del dispositivo;
+	\item \lstinline|color|: il numero di bit di codifica dei colori.
+\end{itemize}
+
+Una media query si presenta in forma:
+\begin{lstlisting}[language=css, style=codestyle]	
+@media only screen and (max-width: 480px) {
+	/* si applica a dispositivi con schermo di larghezza minore di 480 px */
+}
+\end{lstlisting}
+dove il tag \lstinline|only| indica di non applicare la regola su browser incompatibili con le media query.
+Alternativamente, si può scrivere:
+\begin{lstlisting}[language=css, style=codestyle]	
+@media all and (orientation: landscape) {
+	/* si applica a dispositivi in orientamento landscape */
+}
+\end{lstlisting}
+
+Attraverso una combinazione di \textit{liquid design} e media query, si possono creare layout in cosiddetto \textit{responsive design}, cioè che si adattano a diverse modalità di visualizzazione su diversi dispositivi.
+\end{document}
