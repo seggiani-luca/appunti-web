@@ -187,6 +187,8 @@
 \thispagestyle{empty}
 \pagestyle{fancy}
 
+\lstset{language=javascript, style=codestyle}
+
 % testo
 \subsection{JavaScript}
 Il linguaggio Javascript è fondamentale allo sviluppo web moderno.
@@ -234,11 +236,18 @@ Il javascript può essere inserito in diversi modi nei nostri documenti HTML:
 	alert("Ciao vecchio!");
 </script>
 \end{lstlisting}
-	\item \textbf{Esterno:} sempre indicato dall'elemento \lstinline|script|, ma per riferimento, e contenuto effettivamente in un file separato.
+Il codice inserito in modalità embedded viene eseguito al caricamento della pagina, tranne le funzioni che, ovviamente, vengono eseguite alla chiamata.
+	\item \textbf{Esterno:} sempre indicato dall'elemento \lstinline|script|, ma per riferimento attraverso l'attributo \lstinline|src|, che si riferisce ad un file separato con estensione \lstinline|.js|.
 \begin{lstlisting}[language=html, style=codestyle]	
 <script src="greeting.js"</script>
 \end{lstlisting}
+All'interno dei file \lstinline|.js| non si può includere alcun codice HTML (nemmeno i tag \lstinline|<script>| / \lstinline|</script>|).
 \end{itemize}
+
+L'esecuzione del codice avviene, come abbiamo detto, al caricamento della pagina per codice all'infuori di funzioni, e alla chiamata per codice all'interno di funzioni.
+Inoltre, vedremo come si possono eseguire funzioni in corrispondenza di determinati \textbf{eventi}.
+
+Inoltre, conviene notare che quando incontra un file JavaScript, il browser arresta il rendering del documento HTML finché non ha finito di eseguire il codice ivi contenuto.
 
 \subsubsection{Utenti senza Javascript}
 Nel caso l'utente non voglia usare Javascript, si può usare l'elemento \lstinline|noscript|, che viene abilitato solamente nel caso Javascript sia disattivato.
@@ -269,7 +278,7 @@ Alcuni dei più usati sono Object, Function, Boolean, Error, Number, Math, Date,
 Useremo alcuni oggetti vitali che non fanno parte della specifica Javascript, ma sono comunque supportati dal browser: questi sono window, console e document.
 
 \subsubsection{Concatenazione}
-Per cooncatenare le stringhe si usa l'operatore \lstinline|+|:
+Per concatenare le stringhe si usa l'operatore \lstinline|+|:
 \begin{lstlisting}[language=javascript, style=codestyle]	
 const country = "France";
 const city = "Paris";
@@ -502,7 +511,7 @@ const taxRate = () => 0.05;
 
 Esistono poi diverse varianti, che ci permettono di esprimere funzioni con livelli variabili di complessità:
 
-\begin{table}[h!]
+\begin{table}[h]
 	\center \rowcolors{2}{white}{black!10}
 \begin{tabular} { p{5cm} | p{5cm} }
 		\bfseries Sintassi tradizionale & \bfseries Sintassi freccia \\
@@ -558,6 +567,49 @@ Notiamo che nel caso precedente abbiamo usato l'ultima contrazione (senza argome
 
 Le funzioni freccia non forniscono un valore specifico a \lstinline|this|, ma usano quello dell'ambito parentale corrente.
 
+\subsubsection{Visibilità}
+Esistono 4 livelli di visibilità (o \textit{scopo}) in JavaScript:
+\begin{itemize}
+	\item \textbf{Visibilità a livello funzione}: anche detta visibiltà locale, specifica a funzioni (ad esempio lo sono gli argomenti di funzione). \lstinline|var|, \lstinline|let| e \lstinline|const| dichiarano variabili a livello visibiltà di funzione. Dobbiamo fare attenzione però, in quanto visibilità a livello funzione non significa visibilità a livello blocco, cioè quello che ci aspetteremo in linguaggi come il C++. Ad esempio, il codice:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+for (var i = 0; i < helpText.length; i++) {
+	var item = helpText[i];
+	document.getElementById(item.id).onfocus = function() {
+		showHelp(item.help);
+	}
+}
+\end{lstlisting}
+ha un errore semantico, in quanto la variabile \lstinline|item|, dichiarata come \lstinline|var| in un blocco non funzione, è effettivamente visibile a livello funzione e va a sovrascriversi ad ogni esecuzione del ciclo for. 
+
+	\item \textbf{Visibilità a livello blocco}: incluso all'interno di un blocco di controllo.
+		Dobbiamo stare attenti ad usare soltanto \lstinline|let| o \lstinline|const| quando si vogliono dichiarare variabili a visibilità a livello blocco, come appare chiaro dall'esempio precedento. La parola chiave \lstinline|var| infatti, come abbiamo detto, dichiara variabili visibili a livello funzione o globale.
+		Questa differenza deriva dal fatto che la visibilità a livello blocco, e quindi le relative parole chiave, sono state introdotte solo nella versione ES6 di JavaScript;
+	\item \textbf{Visibilità di modulo:} riguarda il codice organizzato in file, o \textit{moduli}, separati. Ogni variabile dicharata in un modulo è privata a quel modulo a meno che non venga \textbf{esportata} dal modulo e \textbf{importata} da un altro modulo;
+	\item \textbf{Visibilità globale}: le variabili definite con visibilità globale (quindi abbiamo detto definite con \lstinline|var| fuori dallo scopo ) sono visibili da ogni parte del codice dopo la loro dichiarazione.
+\end{itemize}
+
+Si nota inoltre che il JavaScript supporta la \texbf{dichiarazione implicita} di variabili, che prendono automaticamente visbilità globale (come con \lstinline|var|).
+
+Notiamo che in JavaScript esite il meccanismo della cosiddetta \textbf{closure}: cioè, la chiusura di una funzione è un'oggetto che contiene la funzione e la sua catena di visibilità, ergo che conserva il valore delle variabili a lei visibili a tempo di dichiarazione.
+Possiamo fare l'esempio:
+\begin{lstlisting}[language=javascript, style=codestyle]	
+function foo() {
+	var name = "Pino";
+	function saluta() {
+		console.log("Ciao " + );
+	}
+	saluta();
+}
+
+/* ... */
+foo();
+\end{lstlisting}
+
+Alla chiamata della funzione foo(), viene istanziata la variabile \lstinline|name|, e poi viene chiamata la funzione \lstinline|saluta()|.
+Questa non ha variabili locali, ma vede comunque la variabile \lstinline|name| dichiarata dalla funzione madre.
+Ergo, la chiamata di \lstinline|foo()| risulta nella corretta esecuzione di saluta(), cioè nell'output della stringa \lstinline|"Ciao Pino"|, anche se effettivamente la funzione \lstinline|saluta()| chiamata da \lstinline|foo()| non ha una dichiarazione interna di \lstinline|name|.
+Questo meccanismo prende anche il nome di \textbf{scoping lessicale}.
+
 \subsubsection{Output}
 Ci vengono fornite alcune funzioni di output predefinite:
 \begin{itemize}
@@ -571,5 +623,7 @@ Alternativamente, si può usare:
 	\item \lstinline|document.write()|: scrive contenuti direttamente nel file HTML;
 	\item \lstinline|console.log()|: visualizza contenuti nella console Javascript del browser.
 \end{itemize}
+
+Vedremo in seguito metodi più sofisticati per interagire con la pagina e con l'utente.
 
 \end{document}

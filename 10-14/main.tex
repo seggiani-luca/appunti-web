@@ -458,14 +458,14 @@ Si può ordinare agli elementi di disporsi su più righe nel caso di overflow at
 Si possono combinare direzione e wrap in un unica proprietà, \lstinline|flex-flow|.
 Ad esempio, si può avere \lstinline|flex-flow: column wrap|.
 
-Esiste poi la proprietà \lstinline|flex|, che determina come gli elementi vanno a riempire lo spazio disponibile.
+Esiste poi la proprietà \lstinline|flex|, applicata ai flex item, che determina come gli elementi stessi vanno a riempire lo spazio disponibile.
 Si nota che questo si applica di default a layout orizzontali, in quanto su layout verticali bisogna introdurre artificialmente spazio libero (di norma un contenitore si restringerebbe a contenere gli elementi nel minor spazio possibile).
 Si hanno quindi i valori per \lstinline|flex|:
 \begin{itemize}
 	\item \lstinline|initial|: il valore di default di \lstinline|flex| è \lstinline|initial|, che si limita ad affiancare gli elementi da sinistra verso destra;
 	\item \lstinline|auto|: il valore \lstinline|auto| cerca invece di allargare ogni elemento il più possibile in modo da riempire tutto lo spazio possibile.
 
-Implicitamente, questo valore imposta le proprietà dei flex item:
+Implicitamente, questo valore imposta le proprietà del flex item:
 \begin{itemize}
 	\item \lstinline|flex-grow|, che permette agli elementi di accrescere in dimensioni più della loro \lstinline|flex-basis|, cioè appropiarsi di eventuale spazio libero fornito ad altri elementi;
 	\item \lstinline|flex-shrink|, che permette agli elementi di rimpicciolire in dimensioni più della loro \lstinline|flex-basis|
