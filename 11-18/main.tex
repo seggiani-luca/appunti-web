@@ -1,0 +1,369 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+% imposta il titolo
+\title{Appunti Progettazione Web}
+\author{Luca Seggiani}
+\date{2024}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+\lstdefinelanguage{css}{
+  keywords={text-shadow, text-direction, background-attachement, background-size, font, font-family, font-size, font-style, font-weight, @font-face, letter-spacing, line-height, text-align, text-decoration, text-indent, background, background-color, background-image, background-position, background-repeat, box-shadow, color, opacity, border, border-color, border-width, border-style, border-top, border-left, border-right, border-bottom, border-image, border-radius, padding, padding-bottom, padding-left, padding-right, padding-bottom, margin, margin-bottom, margin-left, margin-right, margin-bottom, height, max-height, min-height, width, max-width, min-width, bottom, left, right, top, clear, display, float, overflow, position, visibility, z-index, list-style, list-style-image, list-style-type, animation, filter, perspective, transform, transition ,a, link, visited, focus, hover, active, checked, first-letter, first-line, before, after, cursor, first-child, font-style,color,background-image:,margin,padding,font,weight,display,position,top,left,right,bottom,list,style,border,size,white,space,min,width, transition:, transform:, transition-property, transition-duration, transition-timing-function},	
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  alsoletter={:},
+  alsodigit={-},
+	literate=%
+    {:}{{\textcolor{black}{:}}}1,  % Treat ':' as a regular symbol, not part of a keyword
+}
+
+\lstdefinelanguage{javascript}{
+	keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywords={class, export, boolean, throw, implements, import, this},
+	ndkeywordstyle=\color{darkgray}\bfseries,
+	identifierstyle=\color{black},
+	sensitive=false,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{purple}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	morestring=[b]',
+	morestring=[b]"
+}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 18-11-24}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+\lstset{language=php, style=codestyle}
+
+% testo
+\subsection{Sviluppo lato server}
+Il prossimo linguaggio che vedremo, il \textbf{PHP} è un linguaggio di scripting \textbf{lato server}.
+Attraverso lo sviluppo lato server, non siamo più limitati a fornire pagine statiche atraverso il nostro web server, ma possiamo \textit{generare} contenuti \textbf{dinamici}.
+
+\subsubsection{Alcune tecnologie lato server}
+Vediamo alcune tecnologie per lo sviluppo lato server:
+\begin{itemize}
+	\item \textbf{JSP} (Java Server Pages): un ambiente che usa il linguaggio di programmazione Java.
+		Veniva spesso usato nei sistemi informatici di grandi aziende (banche, ecc,,.). 
+		Ad oggi è stato soppiantato, al meno al di fuori degli ambiti aziendali, da altri framework;
+	\item \textbf{Node.js}: un ambiente lato server che permette di usare il JavaScript anche sul lato server. 
+		Questo rende Node.js estremamente vantaggioso per gli sviluppatori che vogliono usare lo stesso linguaggio sia lato client che lato server.
+		Inoltre, Node.js è il suo stesso web server, ergo elimina la necessità di altri web server (come ad esempio Apache);
+	\item \textbf{PHP}: sta per \textit{Personal Home Page}, o più recentemente \textit{PHP: Hypertext Preprocessor}, è una tecnologia lato server che può essere usata direttamente all'interno dell'HTML. 
+		Viene compilato in una rappresentazione intermedia (\textit{opcode}) simile al \textit{bytecode} del Java.
+		Viene usato largamente nei cosiddetti \textbf{CMS}, ossia Content Management System, fra cui ricordiamo WordPress. 
+\end{itemize}
+
+\subsection{Responsabilità del web server}
+Riassumendo, possiamo dire che il web server deve occuparsi di:
+\begin{itemize}
+	\item Gestire connessioni attraverso il protocollo a livello di \textit{application layer} HTTP;
+	\item Rispondere alle richieste di risorse statiche (viste finora, in HTML, JavaScript e CSS) e dinamiche (generate col PHP o altre tecnologie lato server);
+	\item Gestire i permessi all'accesso di determinate risorse;
+	\item Cifrare e comprimere dati;
+	\item Gestire più domini e URL;
+	\item Gestire connessioni a tecnologie databse quali MySQL e MariaDB;
+	\item Gestire cookie e stati;
+	\item Caricare e gestire file generati dagli utenti o altri web server.
+\end{itemize}
+
+\subsubsection{Lo stack LAMP}
+Abbiamo visto che tecnologie lato server vengono create attraverso determinati \textit{software stack}, fra cui ricordiamo il LAMP (XAMPP su Windows), che comprende:
+\begin{itemize}
+	\item \textbf{L}: il sistema operativo Linux (più probabilmente un sistema operativo GNU/Linux, costituito da software di GNU sul kernel Linux);
+	\item \textbf{A}: il web server Apache;
+	\item \textbf{M}: il DBMS (\textit{Database Management System}) MariaDB (storicamente MySQL);
+	\item \textbf{P}: il linguaggio di scripting PHP (e storicamente il \textit{Perl}, che forma la seconda "P" in XAMPP).
+\end{itemize}
+
+Possiamo vedere Apache come un \textbf{intermediario} fra le richieste HTTP e il nostro codice in PHP.
+Quando il browser invia una richiesta, il web server carica la risorsa corrispondente, esegue l'eventuale codice PHP per generare risorse, ecc... e restituisce la pagina completa.
+Sui sistemi Linux, Apache è un \textbf{daemon} (\textit{servizio} su Windows), cioè un processo che viene eseguito in background sulla macchina server.
+
+Apache implementa le sue funzionalità attraverso diversi \textbf{moduli}:
+\begin{itemize}
+	\item \lstinline|mod_auth|: si occupa di autorizzare gli utenti che accedono alla pagina attraverso il protocollo HTTP;
+	\item \lstinline|mod_rewrite|: si occupa di accorciare gli URL e effettuare redirezioni;
+	\item \lstinline|mod_ssl|: si occupa della validazione di certificati SSL;
+	\item \lstinline|mod_php5|: PHP, a sua volta diviso in alcuni moduli:
+		\begin{itemize}
+			\item \textbf{PHP core}: la libreria base del PH, che include funzionalità di base come gestione di stringhe, array, matematica, ecc...
+			\item \textbf{Extension layer}: agganci esterni per database, protocolli come l'FTP, e formati come l'XML;
+			\item \textbf{Zend Engine}: si occupa della lettura effettiva di un file PHP, la compilazione e l'esecuzione. 
+		\end{itemize}
+\end{itemize}
+
+\subsubsection{Apache e esecuzione parallela}
+Il server Apache può funzionare in due modalità fondamentali:
+\begin{itemize}
+	\item \textbf{Multi-process}, anche detta \textit{worker}: un nuovo processo viene creato per ogni richiesta che viene ricevuta;
+	\item \textbf{Multi-threaded}, anche detta \textit{preforked}: più processi (solitamente uno per thread, o \textit{flusso di esecuzione}) gestiscono più richieste contemporaneamente.  
+\end{itemize}
+
+\subsection{PHP}
+Il PHP, come il JavaScript, ha sintassi \textit{C-like} ("simile al C").
+Gli script in PHP hanno estensione \lstinline|.php|, e hanno l'aspetto di file HTML inframezzati da opportuni \textbf{tag PHP}:
+\begin{lstlisting}[language=php, style=codestyle]	
+<?php echo "Ciao vecchio!" ?>
+\end{lstlisting}
+
+\subsubsection{Commenti}
+I commenti in PHP possono essere:
+\begin{itemize}
+	\item Su linea singola, indicati con \lstinline|//| o \lstinline|#|;
+	\item Su più linee, indicati con la classica sintassi \lstinline|/* ... */|.
+\end{itemize}
+
+\subsubsection{Variabili}
+Le variabili in PHP sono a \textbf{tipizzazione dinamica}, e il valore di una variabile può cambiare nel suo tempo di vita (\textit{loose typing}). 
+Per dichiarare (e in seguito accedere a) una variabile bisogna prefiggere al suo identificatore il simbolo \lstinline|$|.
+I tipi supportati dal PHP sono:
+\begin{itemize}
+	\item \textbf{Boolean}: tipi booleani (vero / falso);
+	\item \textbf{Integer}: interi con segno;
+	\item \textbf{Float}: numeri a virgola mobile;
+	\item \textbf{String}: stringhe di caratteri;
+	\item \textbf{Array}: collezioni di oggetti;
+	\item \textbf{Object}: istanze di classe.
+\end{itemize}
+
+Le variabili \textbf{costanti} vengono definite attraverso la funzione \lstinline|define()|, e di li in poi riferite senza usare il simbolo \lstinline|$|.
+
+\subsubsection{Concatenazione di stringhe}
+Le stringhe in PHP vengono concatenate attraverso l'operatore punto (\lstinline|.|).
+È permesso usare direttamente il nome di variabile di una stringa dentro a un altra stringase si antepone il prefisso \lstinline|$|:
+\begin{lstlisting}[language=php, style=codestyle]	
+$firstName = "Tizio";
+$lastName = "Caio";
+// queste istruzioni sono equivalenti
+echo "<em>" . $firstName . $secondName . "</em>";
+echo "<em> $firstName $secondName </em>";
+\end{lstlisting}
+
+\subsubsection{Sintassi alternativa per le strutture di controllo}
+Il PHP prevede una sintassi alternativa, oltre a quella tipica del C, per le varie strutture di controllo (if, for, ecc...).
+Si possono infatti usare i due punti al posto della graffa aperta (e quindi omettere la graffa chiusa):
+\begin{lstlisting}[language=php, style=codestyle]	
+<?php if($condizione = "vera") : ?>
+	<a href="primo.php">Primo</a>
+<?php else : ?>
+	<a href="secondo.php">Secondo</a>
+<?php endif ;?>
+\end{lstlisting}
+
+\subsubsection{Output}
+L'output in PHP si può fare con la funzione (vista finora) \lstinline|echo|, o attraverso la \lstinline|printf|, derivata direttamente dal C.
+Ricordiamo che in C la \lstinline|printf| si aspetta un \textbf{segnaposto}, in forma:
+\begin{itemize}
+	\item \lstinline|b|: binario;
+	\item \lstinline|d|: decimale (intero con segno);
+	\item \lstinline|f|: virgola mobile;
+	\item \lstinline|o|: ottale;
+	\item \lstinline|x|: esadecimale;
+	\item \lstinline|s|: stringa.
+\end{itemize}
+con eventuale specifica di precisione (ad esempio, \lstinline|%.2f| restituisce un numero a virgola mobile con 2 cifre significative).
+
+\subsubsection{Inclusione di file}
+Il PHP permette di includere all'interno di script altri file (quindi altri script) in PHP.
+Questo si può fare attraverso le funzioni:
+\begin{itemize}
+	\item \lstinline|include|: include un file, e nel caso si verifichi un errore si limita a mostrare un avviso;
+	\item \lstinline|include_once|: come sopra, ma si assicura di non includere lo stesso file più volte;
+	\item \lstinline|require| :include un file, e nel caso si verifichi un errore arresta l'esecuzione; 
+	\item \lstinline|require_once|: come sopra, come sopra;
+\end{itemize}
+
+L'inclusione avviene come una copiatura diretta del file dove si trova la direttiva di inclusione, e quindi allo stesso livello di visibilità (di blocco, di funzione, ecc...) in cui si trova la direttiva di inclusione stessa.
+
+\subsubsection{Funzioni}
+Le funzioni in PHP vengono dichiarate sempre attraverso la parola chiave \lstinline|function|.
+Gli argomenti di funzione vengono detti in PHP \textbf{parametri}.
+È supportato il passaggio con valori di riferimento, e ancora per valore e per \textbf{riferimento}, usando la sintassi (\lstinline|&|) del C.
+Si noti che il passaggio di default è comunque per \textbf{valore}.
+
+Inoltre, notiamo che le variabili definite all'esterno di funzioni \textbf{non} sono visibili all'interno delle funzioni, a meno di non usare la parola chiave \lstinline|global|:
+\begin{lstlisting}[language=php, style=codestyle]	
+$count = 56;
+
+function func() {
+	echo $count; // errore o output vuoto
+	echo global $count: // tutto ok
+}
+
+echo $count; // tutto ok
+\end{lstlisting}
+
+\subsubsection{Array in PHP}
+Le array in PHP sono effettivamente \textbf{mappe ordinate} (\textit{array associativi}), cioè coppie ordinate di \textbf{indici} (sostanzialmente \textit{chiavi}) e \textbf{valori}).
+
+Possiamo infatti usare la sintassi tradizionale:
+\begin{lstlisting}[language=php, style=codestyle]	
+$days = array("Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom");
+// oppure:
+$days = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"]; 
+\end{lstlisting}
+o la sintassi associativa:
+\begin{lstlisting}[language=php, style=codestyle]	
+$days = array(0 => "Lun", 1 => "Mar", 2 => "Mer", 3 => "Gio", 4 => "Ven", 5 => "Sab", 6 => "Dom");
+\end{lstlisting}
+
+Sono supportati, come in C, \textit{array di array}, cioè \textbf{array multidimensionali}.
+
+Per l'iterazione su array si può usare la funzione \lstinline|count|, che restituisce la dimensione di un array, oppure il costrutto \lstinline|foreach|, simle al \lstinline|for(... of ...)| del JavaScript.
+
+\end{document}
