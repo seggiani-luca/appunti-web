@@ -1,0 +1,267 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+% imposta il titolo
+\title{Appunti Progettazione Web}
+\author{Luca Seggiani}
+\date{2024}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+\lstdefinelanguage{css}{
+  keywords={text-shadow, text-direction, background-attachement, background-size, font, font-family, font-size, font-style, font-weight, @font-face, letter-spacing, line-height, text-align, text-decoration, text-indent, background, background-color, background-image, background-position, background-repeat, box-shadow, color, opacity, border, border-color, border-width, border-style, border-top, border-left, border-right, border-bottom, border-image, border-radius, padding, padding-bottom, padding-left, padding-right, padding-bottom, margin, margin-bottom, margin-left, margin-right, margin-bottom, height, max-height, min-height, width, max-width, min-width, bottom, left, right, top, clear, display, float, overflow, position, visibility, z-index, list-style, list-style-image, list-style-type, animation, filter, perspective, transform, transition ,a, link, visited, focus, hover, active, checked, first-letter, first-line, before, after, cursor, first-child, font-style,color,background-image:,margin,padding,font,weight,display,position,top,left,right,bottom,list,style,border,size,white,space,min,width, transition:, transform:, transition-property, transition-duration, transition-timing-function},	
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  alsoletter={:},
+  alsodigit={-},
+	literate=%
+    {:}{{\textcolor{black}{:}}}1,  % Treat ':' as a regular symbol, not part of a keyword
+}
+
+\lstdefinelanguage{javascript}{
+	keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywords={class, export, boolean, throw, implements, import, this},
+	ndkeywordstyle=\color{darkgray}\bfseries,
+	identifierstyle=\color{black},
+	sensitive=false,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{purple}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	morestring=[b]',
+	morestring=[b]"
+}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 25-11-24}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+\lstset{style=codestyle, language=php}
+
+% testo
+\TODO % mancano i superglobali
+
+\subsection{Superglobali}
+
+\subsubsection{\$\_SERVER}
+
+\lstinline|$_SERVER| rappresenta un'array associativa che contiene opzioni di configurazione per PHP e il server Apache, e gli header delle richieste HTTP inviate dai client.
+
+Ad esempio, possiamo trovare le chiavi:
+\begin{itemize}
+	\item \lstinline|SERVER_NAME|: il nome del sito che è stato richiesto; 
+	\item \lstinline|SERVER_ADDR|: l'indirizzo IP di tale server; 
+	\item \lstinline|DOCUMENT_ROOT|: la directory da cui stiamo eseguendo lo script; 
+	\item \lstinline|SCRIPT_NAME|: una chiave (il nome) dello script in esecuzione;
+	\item \lstinline|REQUEST_METHOD|: restituisce se il metodo di accesso con cui si è fatto accesso alla pagina è GET, HEAD, POST o PUT;
+	\item \lstinline|REMOTE_ADDR|: l'indirizzo IP del richiedente; # curioso
+	\item \lstinline|HTTP_USER_AGENT|: sistema operativo e browser del client; 
+	\item \lstinline|HTTP_REFERER|: l'indirizzo IP della pagina (se esiste) che conteneva il link usato per raggiungere la pagina corrente.
+\end{itemize}
+
+Ricordiamo che, come sempre, \textbf{non} possiamo fidarci del client, e quindi i valori di \lstinline|HTTP_USER_AGENT| e \lstinline|HTTP_REFERER| potrebbero essere falsificati.
+
+\subsection{Gestione di file caricati dall'utente}
+
+\lstinline|$_FILES| rappresenta una variabile associativa che contiene oggetti che sono stati caricati dalla richiesta corrente, ciascuno come una coppia chiave-valore.
+Ricordiamo quindi che la trasmissione di file dal client si fa attraverso la richiesta POST.
+A questo punto, possiamo quindi creare un form che ottiene file dall'utente come segue:
+\begin{lstlisting}[language=html, style=codestyle]	
+<form enctype="multipart/form-data" method="post">
+	<input type="file" name="file1" id="file1"/>
+	<input type="submit"/>
+</form>
+\end{lstlisting}
+
+Ogni elemento associato alla chiave per ogni file sarà un'array che conterrà i le chiavi:
+\begin{itemize}
+	\item \lstinline|name|: il nome del file sulla macchina del client;
+	\item \lstinline|type|: il tipo MIME (l'estensione) del file.
+		Potremmo voler limitare i tipi di file supportati: questo si può fare lato server controllando l'estensione di ogni elemento di \lstinline|$_FILES| caricato.
+		Questo si può fare agevolmente con la funzione \lstinline|explode()|, che segmenta la stringa in base a delimitatori specificati (nel nostro caso il punto "\lstinline|.|"), o direttamente controllando il campo \lstinline|type| di ogni elemento di \lstinline|$_FILES|.
+	\item \lstinline|tmp_name|: il nome del file sul server, che è una locazione temporanea;
+	\item \lstinline|error|: un intero che codifica diversi stati, fra cui ricordiamo UPLOAD\_ERR\_OK con valore 0 (che significa operazione andata a buon fine).
+	\item \lstinline|size|: un intero che rappresenta la dimensione in byte del file caricato. Potremmo voler limitare le dimensioni dei file inviati al nostro server. Possiamo fare ciò attraverso 3 meccanismi:
+		\begin{itemize}
+			\item HTML nel form di input, cioè inserendo un elemento \lstinline|input| nascosto con una coppia chiave valore \lstinline|MAX_FILE_SIZE| e il valore in byte della dimensione massima dei file che il browser dovrà inviare.
+				Questo meccanismo può essere manomesso dall'utente, e quindi va verificato nuovamente lato server.
+				Notiamo inoltre che la maggior parte dei browser in commercio non supportano questo elemtno, ma è il PHP che solitamente si occupa di trasformare la sua inclusione in una legge che impedisce all'utente di caricare file più grandi del dovuto; # chiarisci
+			\item JavaScript nel form di input, cioè controllando il file in uno script lato client. In particolare, l'elemento \lstinline|input| di tipo \lstinline|file| contiene un'array \lstinline|files|, dove ogni file ha un campo \lstinline|size|.
+				Anche questo meccanismo è facilmente manomesso dall'utente.
+			\item PHP,  controllando come nell'esempio precedente le dimensioni, ma stavolta lato server, cioè usando direttamente l'array \lstinline|$_FILES| e il campo \lstinline|size| dei suoi elementi, 
+		\end{itemize}
+\end{itemize}
+
+\subsubsection{Spostare i file}
+Possiamo spostare i file caricati dall'utente attraverso la funzione \lstinline|move_uploaded_file()|, che prende come primo argomento la locazione temporanea \lstinline|tmp_name| del file o altre locazioni dove esso si potrebbe trovare, e come secondo argomento l'indirizzo di destinazione nel filesystem del server.
+
+\subsection{Leggere e scrivere file}
+Ci sono due modi di leggere e scrivere file in PHP:
+\begin{itemize}
+	\item \textbf{Accesso in stream:} il file viene letto una porzione alla volta, attraverso il concetto di stream, implementato analogamente ad altri linguaggi (come ad esempio il C).
+	\item \textbf{Accesso all-in-memory:} il file viene caricato completamente in memoria, rendendo più facile la sua elaborazione.
+\end{itemize}
+
+Chiaramente, il primo approccio si presta a file di grandi dimensioni o a contesti dove le prestazioni sono fondamentali, mentre il secondo approccio è più agevole da usare, ma solo su file di piccole dimensioni.
+
+\subsubsection{Accesso in stream}
+Per aprire un file in modalità stream si usa la funzione \lstinline|fopen()|.
+Da qui in poi il file è aperto come uno stream sequenziale, con un cursore che indica la posizione corrente, e sono disponibili le \lstinline|fread()|, \lstinline|fgets()|, \lstinline|fwrite|, \lstinline|fclose()|, ecc... a cui siamo abituati dal C.
+
+\subsubsection{Accesso all-in-memory}
+Nell'accesso all-in-memory, possiamo usare le funzioni \lstinline|file()| che mette l'intero file in un array di stringhe rappresentanti ogni riga del file, \lstinline|file_get_contents()|, che legge l'intero file in una variabile stringa, e \lstinline|file_put_contents|, che scrive i contenuti di una variabile stringa in un file.
+
+\TODO % classi
+
+\end{document}

@@ -1,0 +1,448 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+% imposta il titolo
+\title{Appunti Progettazione Web}
+\author{Luca Seggiani}
+\date{2024}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+\lstdefinelanguage{css}{
+  keywords={text-shadow, text-direction, background-attachement, background-size, font, font-family, font-size, font-style, font-weight, @font-face, letter-spacing, line-height, text-align, text-decoration, text-indent, background, background-color, background-image, background-position, background-repeat, box-shadow, color, opacity, border, border-color, border-width, border-style, border-top, border-left, border-right, border-bottom, border-image, border-radius, padding, padding-bottom, padding-left, padding-right, padding-bottom, margin, margin-bottom, margin-left, margin-right, margin-bottom, height, max-height, min-height, width, max-width, min-width, bottom, left, right, top, clear, display, float, overflow, position, visibility, z-index, list-style, list-style-image, list-style-type, animation, filter, perspective, transform, transition ,a, link, visited, focus, hover, active, checked, first-letter, first-line, before, after, cursor, first-child, font-style,color,background-image:,margin,padding,font,weight,display,position,top,left,right,bottom,list,style,border,size,white,space,min,width, transition:, transform:, transition-property, transition-duration, transition-timing-function},	
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  alsoletter={:},
+  alsodigit={-},
+	literate=%
+    {:}{{\textcolor{black}{:}}}1,  % Treat ':' as a regular symbol, not part of a keyword
+}
+
+\lstdefinelanguage{javascript}{
+	keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywords={class, export, boolean, throw, implements, import, this},
+	ndkeywordstyle=\color{darkgray}\bfseries,
+	identifierstyle=\color{black},
+	sensitive=false,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{purple}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	morestring=[b]',
+	morestring=[b]"
+}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 02-12-24}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+\lstset{style=codestyle, language=php}
+
+% testo
+\subsection{Connettere PHP a MySQL}
+Vediamo come connetterci, attraverso script PHP, al database MySQL (MariaDB su LAMP). 
+Ciò che vogliamo fare è essenzialmente:
+\begin{itemize}
+	\item Connetterci al DBMS;
+	\item Gestire eventuali errori di connessione:
+	\item Eseguire query sul database;
+	\item Elaborare i risultati;
+	\item Liberare le risorse e chiudere la connessione.
+\end{itemize}
+
+Esistono più librerie per l'interfacciamento con DBMS:
+\begin{itemize}
+	\item \textbf{mysqli}, procedurale o orientata agli oggetti;
+	\item \textbf{PDO}, orientata agli oggetti.
+\end{itemize}
+
+\subsubsection{Connettersi al database}
+Vediamo come stabilire connessioni al database con mysqli e PDO:
+\begin{itemize}
+	\item \textbf{mysqli}:
+\begin{lstlisting}[language=php, style=codestyle]	
+// queste variabili variano di installazione in installazione
+$host = "localhost";
+$database = "testdb";
+$user = "testuser";
+$pass = "testpassword";
+
+$connection = my_sqli_connect($host, $user, $pass, $database);
+\end{lstlisting}
+	\item \textbf{PDO}:
+\begin{lstlisting}[language=php, style=codestyle]	
+// queste variabili variano di installazione in installazione
+$connection_string = "mysql:host=localhost;dbname=testdb";
+$user = "testuser";
+$pass = "testpassword";
+
+$PDO = new PDO($connection_string, $user, $pass); // questa e' un'istanza di classe!
+\end{lstlisting}
+\end{itemize}
+
+Notiamo che scrivere direttamente nel codice di connessione i dettagli del database e dell'utente che vi accede non è molto saggio.
+Un'opzione migliore è quella di definire variabili apposite:
+\begin{lstlisting}[language=php, style=codestyle]	
+<?php
+define("DBHOST", "localhost");
+define("DBNAME", "testdb");
+define("DBUSER", "testuser");
+define("DBPASS", "testpassword");
+?>
+\end{lstlisting}
+
+\subsubsection{Gestione degli errori}
+Le due librerie gestiscono diversamente gli errori di connessione:
+\begin{itemize}
+	\item \textbf{mysqli} usa statement condizionali (if-else) sugli oggetti restituiti dai tentativi di connessione;
+	\item \textbf{PDO} si basa su blocchi try-catch di gestione delle eccezioni.
+\end{itemize}
+
+\subsubsection{Eseguire query}
+Vediamo come eseguire query negli oggetti restituiti da mysqli e PDO:
+\begin{itemize}
+	\item \textbf{mysqli}:
+\begin{lstlisting}[language=php, style=codestyle]	
+$sql = "SELECT * FROM Biglietti WHERE Name = "Rossi"
+$result = mysqli_query($connection, $sql);
+\end{lstlisting}
+	\item \textbf{PDO}:
+\begin{lstlisting}[language=php, style=codestyle]	
+$sql = "SELECT * FROM Biglietti WHERE Name = "Rossi"
+$result = $PDO->query($sql);
+\end{lstlisting}
+\end{itemize}
+
+\subsubsection{SQL injection}
+Una grande falla di sicurezza che possiamo creare quando integriamo contenuti inseriti dall'utente con le nostre query è l'\textbf{SQL injection}.
+Se inseriamo ciò che otteniamo dall'utente così com'è nelle stringhe di query, questi potrebbe \textbf{chiudere} lo statement SQL corrente ed avviarne un altro, con conseguenze catastrofiche.
+Ad esempio, in una casella per l'ingresso dell'username, l'utente potrebbe scrivere:
+\begin{lstlisting}[language=SQL, style=codestyle]	
+"; TRUNCATE TABLE Users; #
+\end{lstlisting}
+
+A questo punto, se la nostra query aveva l'aspetto:
+\begin{lstlisting}[language=SQL, style=codestyle]	
+SELECT *
+FROM Users 
+WHERE uname="$user_name"
+	AND passwd=MD5("abcd")
+\end{lstlisting}
+
+otterremo la query "maligna":
+\begin{lstlisting}[language=SQL, style=codestyle]	
+SELECT *
+FROM Users 
+WHERE uname="";
+TRUNCATE TABLE Users; # AND passwd=MD5("abcd")
+\end{lstlisting}
+
+Questo comporterebbe l'eliminazione di tutti gli utenti, che chiaramente non è ciò che vogliamo.
+
+\par\smallskip 
+
+Facciamo un'altra considerazione: nel codice presentato, della password viene memorizzato l'hash MD5, e non la password stessa \textit{in chiaro}.
+Questa è sempre una misura di sicurezza, anche se oggi il semplice hashing MD5 non è più considerato un meccanismo di oscuramento delle password sicuro.
+
+\par\smallskip
+
+Possiamo protteggerci dall'SQL injection attraverso due meccanismi:
+\begin{itemize}
+	\item \textbf{Sanitizzazione} dell'input dall'utente: questa si può fare attraverso le funzioni \lstinline|mysqli_real_escape_string()| in mysqli o \lstinline|quote()| in PDO;
+	\item L'uso di \textbf{prepared statement}: un tipo di query che viene "precompilato" dal DBMS, e su cui la sanificazione viene eseguita automaticamente:
+\begin{itemize}
+	\item \textbf{mysqli}:
+\begin{lstlisting}[language=php, style=codestyle]	
+$id = $_GET["id"];
+$sql = "SELECT * FROM Libri WHERE ID=?";
+
+if($statement = mysqli_prepare($connection, $sql)) {
+	// tipi di bind: s - stringa, b - blob, i - int, ecc...
+	mysqli_stmt_bind_param($statement, "i", $id);
+	mysqli_stmt_execute($statement);
+}
+\end{lstlisting}
+	\item \textbf{PDO}:
+\begin{lstlisting}[language=php, style=codestyle]	
+$id = $_GET["id"];
+
+$sql = "SELECT * FROM Libri WHERE ID=?";
+$statement = $PDO->prepare($sql);
+$statement->bindValue(1, $id);
+$statement->execute();
+\end{lstlisting}
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Elaborare i result set}
+Vediamo poi come elaborare i risultati ottenuti dalle query:
+\begin{itemize}
+	\item \textbf{mysqli}:
+		Abbiamo due alternative a seconda del tipo di query (normale o prepared):
+		\begin{itemize}
+			\item \textbf{Query standard}:
+\begin{lstlisting}[language=php, style=codestyle]	
+$sql = "SELECT * FROM Iscrizioni WHERE YEAR(Data) > 2004";
+
+if($result = mysqli_query($connection, $sql)) {
+	while($row = mysqli_fetch_assoc($result)) {
+		// $row contiene il record corrente
+	}
+}
+\end{lstlisting}
+			\item \textbf{Query prepared}:
+\begin{lstlisting}[language=php, style=codestyle]	
+$sql = "SELECT Nome, Data FROM Iscrizioni WHERE YEAR(Data) > 2004";
+
+if($statement = $mysqli_prepare($connection, $sql)) {
+	mysqli_stmt_bindm($statement, "i", $id);
+	mysqli_stmt_execute($statement);
+
+	mysqli_stmt_bind_result($statement, $name, $data);
+
+	while(mysqli_stmt_fetch($statement)) {
+		// $name e $data contentgono i rispettivi attributi del record corrente
+	}
+}
+			\end{lstlisting}
+		\end{itemize}
+	\item \textbf{PDO}:
+\begin{lstlisting}[language=php, style=codestyle]	
+$sql = "SELECT Nome, Data FROM Iscrizioni WHERE YEAR(Data) > 2004";
+
+$result = $pdo->query($sql);
+while($row = $result->fetch()) {
+	// $row contiene il record corrente
+}
+\end{lstlisting}
+\begin{lstlisting}[language=php, style=codestyle]	
+
+\end{lstlisting}
+\end{itemize}
+
+\subsection{File nel database} # codice
+
+\subsection{Gestione dello stato}
+Gestire lo stato nelle applicazioni web ha delle differenze sostanziali dal farlo nelle applicazioni desktop: mentre quest'ultime hanno a disposizione la memoria del dispositivo dell'utente, le applicazioni web dispongono solo della memoria del server, e quindi non hanno di norma modo di memorizzare informazioni relative alla sessione di un qualsiasi utente.
+
+Possiamo introdurre meccanismi di recupero dello stato, in particolare:
+\begin{itemize}
+	\item Stringhe di query: poco usate # ?;
+	\item \textbf{Cookie}.
+\end{itemize}
+
+\subsubsection{Cookie}
+I cookie sono coppie nome-valore memorizzate in file di testo gestiti dal browser (con limite di dimensioni di 4 Kilobyte).
+Come sempre, visto che sono risorse generate sul lato client, non dobbiamo fidarci ciecamente di ciò che otteniamo dai cookie in quanto potrebbero essere stati manipolati.
+
+Il principio di funzionamento dei cookie è il seguente: quando l'utente visita una pagina, il web server inserisce nell'header della risposta HTTP la rchiesta di impostare determinati cookie.
+Il browser, ricevute tali richieste, si occupa di impostare i cooke richiesti.
+Di lì in poi, ad ogni accesso al sito, il browser invierà (idealmente) i cookie che il web server aveva impostato indietro al web server stesso, così che questo possa recuperare informazioni sullo stato.
+
+Le stringhe per l'impostazione di cookie nell'header hanno la forma seguente: 
+\begin{lstlisting}[language=php, style=codestyle]	
+Set-Cookie name=value[;expires=date][;domain=domain][;path=path][;secure]
+\end{lstlisting}
+
+Il browser, di contro, invia indietro stringhe del tipo:
+\begin{lstlisting}[language=php, style=codestyle]	
+Cookie name=value
+\end{lstlisting}
+
+PHP fornisce la funzione \lstinline|setcookie()| per impostare i cookie.
+Questa va eseguita prima di generare qualsiasi output HTML dallo script.
+
+Vediamo le informazioni che può immagazzinare un cookie:
+\begin{itemize}
+	\item \textbf{Scadenza} \textit{(Expire)}: indica il tempo di validità del cookie, cioè il tempo per cui dovrebbe continuare ad essere inviato al web server per ogni richiesta HTTP.
+		Un cookie con scadenza 0 è detto \textbf{cookie di sessione} e vale solo per la sessione corrente (sono di questo tipo i cookie inviati di default dalla \lstinline|setcookie()|);
+	\item \textbf{Dominio} \textit{(Domain)}: indica il dominio per cui il cookie dovrebbe essere inviato, e può essere anche più grande del dominio corrente.
+	\item \textbf{Percorso} \textit{(Path)}: indica il percorso URL che deve esistere nella risorsa richiesta per l'invio del cookie;
+	\item \textbf{Cookie sicuri} \textit{(Secure)}: un flag che indica che l'invio del cookie deve accadere solo attraverso richieste SSL col protocollo HTTPS. I cookie inviati su HTTPS sono di default di questo tipo.
+
+\end{itemize}
+
+\subsubsection{Serializzazione}
+La serializzazione è il processo attraverso il cui si trasformano oggetti arbitrariamente complicati in sequenze di \textit{bit}, \textit{byte}, o a livelli di astrazione superiori \textit{caratteri} (solitamente in codifica ASCII o UTF-8).
+
+PHP fornisce le funzioni \lstinline|serialize()| e \lstinline|unserialize()| proprio per questi scopi.
+
+\subsubsection{Gestione della sessione in PHP}
+PHP fornisce un meccanismo per la gestione della sessione.
+Questo si attiva attraverso la funzione \lstinline|session_start()|.
+Dalla chiamata di questa funzione in poi, si può usare la variabile superglobale \lstinline|$_SESSION| per accedere ad informazioni riguardo alla sessione.
+
+A livello implementativo, il meccanismo di gestione della sessione si basa su un \textbf{cookie di sessione} da 32 bit che viene trasmesso avanti e indietro fra il client e il server.
+Al cookie sono associati dati serializzati (sostanzialmente array associativi), memorizzati nella memoria del server, che vengono restituiti da un componente detto \textbf{session state provider}.
+
+Il problema può porsi quando si hanno più web server che si dividono il carico delle richieste: in questo caso i dati relativi ad una sessione potrebbero essere su uno solo di questi server, e un secondo non potrebbe proseguire correttamente la sessione di un utente.
+Le soluzioni al problema sono le seguenti:
+\begin{itemize}
+	\item \textbf{Load balancer session-aware}: cioè load balancer che inviano richieste successive sempre allo stesso server in modo da preservare le sessioni in corso.
+		Questo approccio rende il load balancer più complesso e meno efficiente.
+	\item \textbf{Server di sessione condiviso}: un server a parte che si occupa di mantenere le informazioni riguardo a tutte le sessioni in corso.
+\end{itemize}
+
+\subsubsection{Web storage}
+Il \textbf{web storage} è un meccanismo implementato lato client dal linguaggio JavaScript che permette la di supplementare i cokie attraverso dati memorizzati in locale sulla macchina del client.
+
+Esistono due oggetti di web storage:
+\begin{itemize}
+	\item \textbf{localStorage}: per informazioni persistenti fra sessioni;
+	\item \textbf{sessionStorage}: per informazioni relative a singole sessioni.
+\end{itemize}
+
+Questi oggetti vengono usati come qualsiasi altro oggetto in JavaScript, cioè possono essere forniti di attributi arbitrari.
+
+\end{document}
