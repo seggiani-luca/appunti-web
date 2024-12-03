@@ -205,7 +205,7 @@ Ad esempio, possiamo trovare le chiavi:
 	\item \lstinline|DOCUMENT_ROOT|: la directory da cui stiamo eseguendo lo script; 
 	\item \lstinline|SCRIPT_NAME|: una chiave (il nome) dello script in esecuzione;
 	\item \lstinline|REQUEST_METHOD|: restituisce se il metodo di accesso con cui si è fatto accesso alla pagina è GET, HEAD, POST o PUT;
-	\item \lstinline|REMOTE_ADDR|: l'indirizzo IP del richiedente; # curioso
+	\item \lstinline|REMOTE_ADDR|: l'indirizzo IP del richiedente; 
 	\item \lstinline|HTTP_USER_AGENT|: sistema operativo e browser del client; 
 	\item \lstinline|HTTP_REFERER|: l'indirizzo IP della pagina (se esiste) che conteneva il link usato per raggiungere la pagina corrente.
 \end{itemize}
@@ -236,7 +236,7 @@ Ogni elemento associato alla chiave per ogni file sarà un'array che conterrà i
 		\begin{itemize}
 			\item HTML nel form di input, cioè inserendo un elemento \lstinline|input| nascosto con una coppia chiave valore \lstinline|MAX_FILE_SIZE| e il valore in byte della dimensione massima dei file che il browser dovrà inviare.
 				Questo meccanismo può essere manomesso dall'utente, e quindi va verificato nuovamente lato server.
-				Notiamo inoltre che la maggior parte dei browser in commercio non supportano questo elemtno, ma è il PHP che solitamente si occupa di trasformare la sua inclusione in una legge che impedisce all'utente di caricare file più grandi del dovuto; # chiarisci
+				Notiamo inoltre che la maggior parte dei browser in commercio non supportano questo elemento, ma è il PHP che solitamente si occupa di trasformare la sua inclusione in una legge che impedisce all'utente di caricare file più grandi del dovuto; # chiarisci
 			\item JavaScript nel form di input, cioè controllando il file in uno script lato client. In particolare, l'elemento \lstinline|input| di tipo \lstinline|file| contiene un'array \lstinline|files|, dove ogni file ha un campo \lstinline|size|.
 				Anche questo meccanismo è facilmente manomesso dall'utente.
 			\item PHP,  controllando come nell'esempio precedente le dimensioni, ma stavolta lato server, cioè usando direttamente l'array \lstinline|$_FILES| e il campo \lstinline|size| dei suoi elementi, 

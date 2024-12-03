@@ -371,14 +371,106 @@ while($row = $result->fetch()) {
 \end{lstlisting}
 \end{itemize}
 
-\subsection{File nel database} # codice
+Notiamo che attraverso la libreria PDO è possibile estrarre gli attributi di un record in un oggetto anziché un array, a patto che i campi dell'oggetto corrispondano ai nomi degli attributi:
+\begin{lstlisting}[language=php, style=codestyle]	
+class Libro {
+	public $id;
+	public $titolo;
+	public $anno;
+	public $descrizione;
+}
+
+// ...
+
+$id = $_GET["ID"];
+$sql = "SELECT id, titolo, anno, descrizione FROM Libro WHERE id=?"
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(1, $id);
+$statement->execute();
+
+$libro = $statement->fetchObject("Libro");
+// adesso $book contiene gli attributi del record:
+// $libro->id, $libro->titolo, ecc...
+\end{lstlisting}
+
+\subsubsection{Chiudere la connessione}
+Vediamo infine come chiudere le connessioni col DBMS e quindi liberare le risorse relative:
+\begin{itemize}
+	\item \textbf{mysqli}:
+\begin{lstlisting}[language=php, style=codestyle]	
+$mysqli_free_result($result);
+$mysqli_close($connection);
+\end{lstlisting}
+	\item \textbf{PDO}:
+\begin{lstlisting}[language=php, style=codestyle]	
+$pdo = null;
+\end{lstlisting}
+\end{itemize}
+
+\subsubsection{Transazioni}
+Sia mysqli che PDO supportano il meccanismo delle transazioni:
+\begin{itemize}
+	\item \textbf{mysqli}:
+\begin{lstlisting}[language=php, style=codestyle]	
+mysqli_autocommit($connection, FALSE); // di default vale TRUE
+
+// query
+
+if($condition) {
+	mysqli_commit($connection);
+} else {
+	mysqli_rollback($connection);
+}
+\end{lstlisting}
+	\item \textbf{PDO}:
+\begin{lstlisting}[language=php, style=codestyle]	
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO__ERRMODE_EXCEPTION); // per ottenere eccezioni dal DBMS
+
+try {
+	$pdo->beginTransaction();
+
+	// query
+
+	$pdo->commit();
+} catch (Exception $e) {
+	$pdo->rollback();
+}
+\end{lstlisting}
+\end{itemize}
+
+\subsection{File nel database}
+Esistono due modi di immagazzinare file in un database:
+\begin{enumerate}
+	\item Memorizzare la locazione del file nel filsystem del database;
+	\item Memorizzare il file direttamente nel database sotto forma di un \textbf{blob}. In particolare, vediamo un esempio di codice:
+\begin{lstlisting}[language=php, style=codestyle]	
+$fileContent = file_get_contents("file.rtf");
+$sql = "INSERT INTO Documenti (File) VALUES(":data")";
+
+$stmt = $pdo->prepare($sql);
+$stmt->bindParam(":data", $fileContent, PDO::PARAM_LOB);
+$stmt->execute();
+
+// il file e' nel server, possiamo recuperarlo con:
+
+$sql = "SELECT * FROM Documents WHERE id=:id";
+$stmt = $pdo->prepare($sql);
+$stmt->bindParam(":id", $_GET["id"]);
+$stmt->execute();
+
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+if($result) {
+	// il file e' in $result["File"]
+}
+\end{lstlisting}
+\end{enumerate}
 
 \subsection{Gestione dello stato}
 Gestire lo stato nelle applicazioni web ha delle differenze sostanziali dal farlo nelle applicazioni desktop: mentre quest'ultime hanno a disposizione la memoria del dispositivo dell'utente, le applicazioni web dispongono solo della memoria del server, e quindi non hanno di norma modo di memorizzare informazioni relative alla sessione di un qualsiasi utente.
 
 Possiamo introdurre meccanismi di recupero dello stato, in particolare:
 \begin{itemize}
-	\item Stringhe di query: poco usate # ?;
+	\item Stringhe di query: le stesse dei metodi POST e GET, ecc... poco usate per la gestione dello stato;
 	\item \textbf{Cookie}.
 \end{itemize}
 
